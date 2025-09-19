@@ -1,0 +1,24 @@
+{
+  "app": { "title": "საქართველოს სასოფლო-სამეურნეო მონიტორინგი" },
+  "nav": { "dashboard": "დაშბორდი", "targeting": "ტარგეტირება და გავლენა", "audit": "აუდიტი და ალერტები" },
+  "layers": { "title": "ფენები", "index": { "title": "ინდექსი" }, "admin": "ადმინისტრაციული საზღვრები" },
+  "filters": { "title": "ფილტრები", "region": "რეგიონი", "municipality": "მუნიციპალიტეტი", "crop": "კულტურა", "age": "ბაღის ასაკი (წ)", "areaHa": "ფართობი (ჰა)", "irrigation": "ირიგაცია", "score": "ქულა", "choose": "აირჩიეთ", "yes": "კი", "no": "არა", "lab": { "title": "ლაბორატორიული ანალიზი" }, "indices": { "title": "ინდექსები" }, "diseases": { "title": "დავადებები", "alternaria_alternata": "ალტერნარია", "verticillium_dahliae": "ვერტიცილიოზი", "colletotrichum_acutatum": "ანთრაქნოზი" }, "insects": { "title": "მავნებლები", "myzus_persicae": "მწვანე ბუგრი", "cydia_pomonella": "ნაყოფჭამია", "tetranychus_urticae": "ობობის ტკიპა (Tetranychus urticae)" } },
+  "kpi": { "orchards": "ბაღების რაოდენობა", "totalArea": "საერთო ფართობი", "avgScore": "საშ. ქულა" },
+  "charts": { "scoreBreakdown": "ქულის დაშლა", "ndviTrend": "NDVI ტენდენცია (12 თვე)", "month": "თვე", "ndvi": "NDVI" },
+  "orchard": { "id": "ბაღი {{id}}", "area": "ფართობი", "age": "ასაკი", "irrigation": "ირიგაცია", "score": "ქულა" },
+  "score": { "irrigation": "მორწყვა", "soil": "ნიავი", "plantHealth": "მცენარის ჯანმრთელობა", "weeds": "სარეველები", "pest": "მავნებლები", "management": "მენეჯმენტი" },
+  "visits": { "title": "სამეთვალყურეო ვიზიტები", "weeds": "სარეველები", "pest": "მავნებლები" },
+  "report": { "download": "აგრონომიული ანგარიშის ჩამოტვირთვა" },
+  "targeting": { "controls": "ინტერვენციის სიმულაცია", "addIrrigation": "მორწყობის დამატება", "improveFertilization": "სასუქის გაუმჯობესება" },
+  "table": { "orchard": "ბაღი", "crop": "კულტურა", "area": "ფართობი", "score": "ქულა", "after": "შემდეგ", "flags": "ალერტები" },
+  "common": { "yes": "კი", "no": "არა" },
+  "unit": { "ha": "ჰა" },
+  "lang": { "ka": "KA", "en": "EN" },
+  "panel": { "left": "ფილტრები", "right": "დეტალები" },
+  "orchard": { "selectPrompt": "დეტალების სანახავად აირჩიეთ ბაღი რუკაზე" },
+  "map": { "zoomHint": "ბაღების პოლიგონების სანახავად დაადიდეთ" },
+  "common": { "show": "აჩვენე", "hide": "დამალე", "yes": "კი", "no": "არა" },
+  "scoreLabel": "ქულა"
+}
+
+

@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+---
+1. **File Structure & Naming**
+   - Maintain the folder structure outlined in the prompt; do not invent new top‑level directories.
+   - All React components must use PascalCase filenames (e.g., `OrchardDrawer.tsx`).
+   - Place mock data and translations in the `/src/data` and `/src/locales` directories respectively.
+   - Use `.tsx` for React components and `.ts` for utility modules.
+
+2. **Dependencies**
+   - Only install the following packages via `package.json`: `react`, `react-dom`, `react-router-dom` (if routing is needed), `typescript`, `vite`, `tailwindcss`, `leaflet`, `react-leaflet`, `recharts` (or `echarts-for-react`), `zustand`, `i18next`, `react-i18next`, `@react-pdf/renderer` or `react-to-print`, and any Tailwind plugin needed for forms or typography.
+   - Do not add other dependencies without explicit mention in the prompt.
+
+3. **Style & Conventions**
+   - Use functional components and React hooks only.
+   - Use Tailwind utility classes for all styling; avoid inline CSS or external stylesheets.
+   - Keep components modular and reusable; avoid monolithic files.
+   - Write TypeScript with explicit types where practical; avoid using `any`.
+   - Use ESLint/Prettier defaults if available in the environment.
+
+4. **Data Handling**
+   - Do not fetch data from remote URLs. Load JSON and GeoJSON files with static imports.
+   - Ensure that all data used in the app resides in `/src/data`.
+   - When processing GeoJSON, use properties as defined in the prompt; do not add or remove keys.
+
+5. **Localization**
+   - Initialize i18next in `src/lib/i18n.ts` with default language `ka` and fallback `en`.
+   - Wrap the application with the `I18nextProvider`.
+   - All text displayed to users must be translated via `t('key')`.
+   - Provide keys in both `ka.json` and `en.json`. Do not hard‑code text.
+
+6. **Maps & Charts**
+   - Use Leaflet via `react-leaflet`; include OpenStreetMap tiles.
+   - Do not call external geocoding or map services requiring an API key.
+   - Use only one map component per page.
+   - For charts (Recharts/ECharts), always specify chart titles and axis titles.
+
+7. **PDF Generation**
+   - For generating the agronomic conclusion report, use either `@react-pdf/renderer` or `react-to-print`.
+   - The PDF must include a header with the orchard name, a summary of attributes, the score breakdown, NDVI trend, and recommendations.
+   - Do not include remote images in the PDF; use only local assets.
+
+8. **Performance & Accessibility**
+   - Ensure the app loads quickly and does not block rendering due to large data files.
+   - Use lazy loading for large components if necessary.
+   - Check color contrast for text and backgrounds; avoid red/green combinations that may be problematic for color‑blind users.
+
+9. **Completion Criteria**
+   - The project builds successfully with `npm install` and `npm run dev`.
+   - The map displays orchard polygons with color coding and tooltips.
+   - The filter panel updates the displayed map and KPIs.
+   - Clicking an orchard opens a drawer with detailed information, charts, timeline, and a working report download.
+   - The targeting & impact tab recalculates scores based on selected interventions.
+   - The audit tab lists flagged orchards and navigates to them on the map.
+   - All user-facing text supports Georgian and English via a language toggle.
+   - All instructions have been followed without introducing unused features or libraries.
+
+Violation of these rules may result in project rejection by the reviewer.

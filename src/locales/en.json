@@ -1,0 +1,24 @@
+{
+  "app": { "title": "Georgia Agricultural Monitoring" },
+  "nav": { "dashboard": "Dashboard", "targeting": "Targeting & Impact", "audit": "Audit & Flags" },
+  "layers": { "title": "Layers", "index": { "title": "Index" }, "admin": "Administrative Boundaries" },
+  "filters": { "title": "Filters", "region": "Region", "municipality": "Municipality", "crop": "Crop", "age": "Orchard age (years)", "areaHa": "Area (ha)", "irrigation": "Irrigation", "score": "Score", "choose": "Please choose", "yes": "Yes", "no": "No", "lab": { "title": "Laboratory analysis" }, "indices": { "title": "Indices" }, "diseases": { "title": "Diseases", "alternaria_alternata": "Alternaria alternata", "verticillium_dahliae": "Verticillium dahliae", "colletotrichum_acutatum": "Colletotrichum acutatum" }, "insects": { "title": "Insects", "myzus_persicae": "Myzus persicae", "cydia_pomonella": "Cydia pomonella", "tetranychus_urticae": "Tetranychus urticae" } },
+  "kpi": { "orchards": "Orchards", "totalArea": "Total area", "avgScore": "Average score" },
+  "charts": { "scoreBreakdown": "Score breakdown", "ndviTrend": "NDVI trend (12 mo)", "month": "Month", "ndvi": "NDVI" },
+  "orchard": { "id": "Orchard {{id}}", "area": "Area", "age": "Age", "irrigation": "Irrigation", "score": "Score" },
+  "score": { "irrigation": "Irrigation", "soil": "Soil", "plantHealth": "Plant health", "weeds": "Weeds", "pest": "Pest", "management": "Management" },
+  "visits": { "title": "Monitoring visits", "weeds": "Weeds", "pest": "Pest" },
+  "report": { "download": "Download Agronomic Report" },
+  "targeting": { "controls": "Simulate interventions", "addIrrigation": "Add irrigation", "improveFertilization": "Improve fertilization" },
+  "table": { "orchard": "Orchard", "crop": "Crop", "area": "Area", "score": "Score", "after": "After", "flags": "Flags" },
+  "common": { "yes": "Yes", "no": "No" },
+  "unit": { "ha": "ha" },
+  "lang": { "ka": "KA", "en": "EN" },
+  "panel": { "left": "Filters", "right": "Details" },
+  "orchard": { "selectPrompt": "Select an orchard on the map to view details" },
+  "map": { "zoomHint": "Zoom in to see orchard polygons in detail" },
+  "common": { "show": "Show", "hide": "Hide", "yes": "Yes", "no": "No" },
+  "scoreLabel": "Score"
+}
+
+

@@ -1,0 +1,11 @@
+{
+  "O-001": [
+    { "season": "Spring", "date": "2024-04-12", "weeds": "low", "pest": "low", "notes": "Good vigor.", "images": [] },
+    { "season": "EarlySummer", "date": "2024-06-20", "weeds": "medium", "pest": "low", "notes": "Slight weed pressure.", "images": [] }
+  ],
+  "O-002": [
+    { "season": "Spring", "date": "2024-04-18", "weeds": "high", "pest": "medium", "notes": "N deficiency suspected.", "images": [] }
+  ]
+}
+
+

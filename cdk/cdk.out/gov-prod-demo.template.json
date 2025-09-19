@@ -1,0 +1,253 @@
+{
+ "Resources": {
+  "SiteBucket397A1860": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "gov-prod-demo/SiteBucket/Resource"
+   }
+  },
+  "SiteBucketPolicy3AC1D0F8": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "SiteBucket397A1860"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "OAIE1EFC67F",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteBucket397A1860",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteBucket397A1860",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "OAIE1EFC67F",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SiteBucket397A1860",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "gov-prod-demo/SiteBucket/Policy/Resource"
+   }
+  },
+  "OAIE1EFC67F": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "Allows CloudFront to reach the bucket"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "gov-prod-demo/OAI/Resource"
+   }
+  },
+  "Distribution830FAC52": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "gov.telagri.com"
+     ],
+     "CustomErrorResponses": [
+      {
+       "ErrorCachingMinTTL": 0,
+       "ErrorCode": 403,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      },
+      {
+       "ErrorCachingMinTTL": 0,
+       "ErrorCode": 404,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      }
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "TargetOriginId": "govproddemoDistributionOrigin1C42C4FD0",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "SiteBucket397A1860",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "govproddemoDistributionOrigin1C42C4FD0",
+       "S3OriginConfig": {
+        "OriginAccessIdentity": {
+         "Fn::Join": [
+          "",
+          [
+           "origin-access-identity/cloudfront/",
+           {
+            "Ref": "OAIE1EFC67F"
+           }
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": "arn:aws:acm:us-east-1:183784642322:certificate/01bf431a-ee0c-4003-bfa4-717daf70fa3b",
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "gov-prod-demo/Distribution/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22LTQrCMBCFz+I+HduK4FYrgqtKPYC0SSrT1kQyE4uU3F1iBV24en/fyyHP1pAu6pESqfpkwAamM9eyF/VIl4lWMO287DWLojUfN8vJDiif33rOQcjBetU6axim0uEVzVZKTXRU2jDy+1FE5hCZv8QeiR02ntGaiP/mEESlyXondZxKz3fPQRirNHS0fOQpZBvIFh0hJs4bxpuGatYXlZ++A+4AAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "gov-prod-demo/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "BucketName": {
+   "Value": {
+    "Ref": "SiteBucket397A1860"
+   }
+  },
+  "DistributionId": {
+   "Value": {
+    "Ref": "Distribution830FAC52"
+   }
+  },
+  "DistributionDomain": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Distribution830FAC52",
+     "DomainName"
+    ]
+   }
+  },
+  "SiteDomain": {
+   "Value": "gov.telagri.com"
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
