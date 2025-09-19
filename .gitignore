@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / Vite
+node_modules/
+dist/
+.vite/
+node_modules/.vite/
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.*
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+
+# Coverage / reports
+coverage/
+.nyc_output/
+
+# CDK
+cdk/cdk.out/
+cdk/dist/
+cdk/.cdk.staging/
+
