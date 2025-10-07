@@ -10,7 +10,7 @@ const LayerToggles: React.FC = () => {
       <h3 className="text-sm font-medium text-gray-900">{t('layers.title')}</h3>
       <fieldset className="space-y-1">
         <legend className="text-xs font-medium text-gray-700">{t('layers.index.title')}</legend>
-        <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-1 text-sm text-gray-700">
           {(['ndvi','evi','ndre','mcari','pri','ndwi','ndmi','lswi','savi','msavi'] as const).map((key) => (
             <label key={key} className="flex items-center gap-2">
               <input type="checkbox" checked={Boolean((filters.indices as any)[key])} onChange={(e) => setFilters({ indices: { ...filters.indices, [key]: e.target.checked } })} />

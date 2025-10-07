@@ -49,7 +49,9 @@ const KpiCards: React.FC = () => {
           </div>
         ))}
       </div>
-      <NdviTrend series={series} title={t('charts.ndviTrend')} />
+      <div className="hidden sm:block">
+        <NdviTrend series={series} title={t('charts.ndviTrend')} />
+      </div>
     </div>
   );
 };

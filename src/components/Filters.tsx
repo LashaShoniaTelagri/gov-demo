@@ -52,10 +52,10 @@ const Filters: React.FC = () => {
       </div>
       <div className="space-y-1">
         <label className="block text-xs text-gray-600">{t('filters.age')}</label>
-        <div className="flex items-center gap-2">
-          <input type="number" className="w-20 rounded border-gray-300" value={filters.ageRange[0]} onChange={(e) => setFilters({ ageRange: [Number(e.target.value), filters.ageRange[1]] })} />
+        <div className="flex items-center gap-2 flex-wrap">
+          <input type="number" className="w-20 sm:w-24 rounded border-gray-300" value={filters.ageRange[0]} onChange={(e) => setFilters({ ageRange: [Number(e.target.value), filters.ageRange[1]] })} />
           <span>–</span>
-          <input type="number" className="w-20 rounded border-gray-300" value={filters.ageRange[1]} onChange={(e) => setFilters({ ageRange: [filters.ageRange[0], Number(e.target.value)] })} />
+          <input type="number" className="w-20 sm:w-24 rounded border-gray-300" value={filters.ageRange[1]} onChange={(e) => setFilters({ ageRange: [filters.ageRange[0], Number(e.target.value)] })} />
         </div>
       </div>
       <div className="space-y-2">
@@ -64,10 +64,10 @@ const Filters: React.FC = () => {
           <option value="undefined">{t('filters.choose')}</option>
       <div className="space-y-1">
         <label className="block text-xs text-gray-600">{t('filters.areaHa')}</label>
-        <div className="flex items-center gap-2">
-          <input type="number" className="w-24 rounded border-gray-300" value={filters.areaRangeHa[0]} onChange={(e) => setFilters({ areaRangeHa: [Number(e.target.value), filters.areaRangeHa[1]] })} />
+        <div className="flex items-center gap-2 flex-wrap">
+          <input type="number" className="w-24 sm:w-28 rounded border-gray-300" value={filters.areaRangeHa[0]} onChange={(e) => setFilters({ areaRangeHa: [Number(e.target.value), filters.areaRangeHa[1]] })} />
           <span>–</span>
-          <input type="number" className="w-24 rounded border-gray-300" value={filters.areaRangeHa[1]} onChange={(e) => setFilters({ areaRangeHa: [filters.areaRangeHa[0], Number(e.target.value)] })} />
+          <input type="number" className="w-24 sm:w-28 rounded border-gray-300" value={filters.areaRangeHa[1]} onChange={(e) => setFilters({ areaRangeHa: [filters.areaRangeHa[0], Number(e.target.value)] })} />
         </div>
       </div>
 
@@ -78,10 +78,10 @@ const Filters: React.FC = () => {
       </div>
       <div className="space-y-1">
         <label className="block text-xs text-gray-600">{t('filters.score')}</label>
-        <div className="flex items-center gap-2">
-          <input type="number" className="w-20 rounded border-gray-300" value={filters.scoreRange[0]} onChange={(e) => setFilters({ scoreRange: [Number(e.target.value), filters.scoreRange[1]] })} />
+        <div className="flex items-center gap-2 flex-wrap">
+          <input type="number" className="w-20 sm:w-24 rounded border-gray-300" value={filters.scoreRange[0]} onChange={(e) => setFilters({ scoreRange: [Number(e.target.value), filters.scoreRange[1]] })} />
           <span>–</span>
-          <input type="number" className="w-20 rounded border-gray-300" value={filters.scoreRange[1]} onChange={(e) => setFilters({ scoreRange: [filters.scoreRange[0], Number(e.target.value)] })} />
+          <input type="number" className="w-20 sm:w-24 rounded border-gray-300" value={filters.scoreRange[1]} onChange={(e) => setFilters({ scoreRange: [filters.scoreRange[0], Number(e.target.value)] })} />
         </div>
       </div>
     </div>

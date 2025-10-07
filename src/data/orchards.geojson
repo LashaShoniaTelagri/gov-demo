@@ -240,6 +240,30 @@
         "flags": ["low_soil_n"]
       },
       "geometry": { "type": "Polygon", "coordinates": [[[41.91, 41.95],[41.93, 41.95],[41.93, 41.97],[41.91, 41.97],[41.91, 41.95]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "orchard_id": "O-011",
+        "cadastre_code": "99.99.99.999",
+        "region": "Kakheti",
+        "municipality": "Sighnaghi",
+        "crop": "Almond",
+        "variety": "Nonpareil",
+        "area_ha": 6.7,
+        "planting_year": 2018,
+        "age_years": 6,
+        "scheme_trees_per_ha": 700,
+        "seedling_origin": "Imported",
+        "irrigation": { "has": true, "source": "Canal" },
+        "soil": { "ph": 6.9, "n": 58, "p": 54, "k": 60 },
+        "indices": { "ndvi_mean": 0.57, "vigor_index": 0.58, "waterlogging_risk": 0.07 },
+        "risk": { "frost_pocket": true, "erosion": false, "wind_exposure": false },
+        "yield_history_t_ha": [1.5, 1.7, 1.8],
+        "score": 61,
+        "flags": []
+      },
+      "geometry": { "type": "Polygon", "coordinates": [[[45.64, 41.76],[45.66, 41.76],[45.66, 41.78],[45.64, 41.78],[45.64, 41.76]]] }
     }
   ]
 }

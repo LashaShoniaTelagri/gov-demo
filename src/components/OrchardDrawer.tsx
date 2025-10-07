@@ -23,7 +23,7 @@ const OrchardDrawer: React.FC<Props> = ({ embedded = false }) => {
 
   const containerClass = embedded
     ? 'h-full bg-white border border-gray-200 rounded-lg flex flex-col'
-    : 'absolute top-0 right-0 h-full w-[420px] bg-white shadow-2xl border-l border-gray-200 flex flex-col';
+    : 'fixed inset-x-0 bottom-0 sm:absolute sm:top-0 sm:right-0 sm:inset-x-auto sm:bottom-auto sm:h-full w-full sm:w-[420px] bg-white shadow-2xl border-t sm:border-l border-gray-200 flex flex-col rounded-t-lg sm:rounded-none z-[500]';
 
   if (!feature) {
     return (

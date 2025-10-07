@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type FiltersState = {
   region?: string;
@@ -50,34 +51,61 @@ export type UIState = {
   showRightPanel: boolean;
 };
 
+export type AuthState = {
+  isAuthenticated: boolean;
+  portal?: string;
+  portfolio?: string;
+  email?: string;
+};
+
 type AppState = {
   filters: FiltersState;
   toggles: LayerTogglesState;
   ui: UIState;
+  auth: AuthState;
   setFilters: (partial: Partial<FiltersState>) => void;
   setToggles: (partial: Partial<LayerTogglesState>) => void;
   setUI: (partial: Partial<UIState>) => void;
+  setAuth: (partial: Partial<AuthState>) => void;
+  logout: () => void;
 };
 
-export const useAppStore = create<AppState>((set) => ({
-  filters: {
-    ageRange: [0, 50],
-    areaRangeHa: [0, 1000],
-    scoreRange: [0, 100],
-    lab: {},
-    indices: { ndvi: false, evi: false, ndre: false, mcari: false, pri: false, ndwi: false, ndmi: false, lswi: false, savi: false, msavi: false },
-    diseases: { alternaria_alternata: false, verticillium_dahliae: false, colletotrichum_acutatum: false },
-    insects: { myzus_persicae: false, cydia_pomonella: false, tetranychus_urticae: false },
-  },
-  toggles: {
-    showOrchards: true,
-    showNdvi: false,
-    showAdmin: true,
-  },
-  ui: { showLeftPanel: true, showRightPanel: false },
-  setFilters: (partial) => set((state) => ({ filters: { ...state.filters, ...partial } })),
-  setToggles: (partial) => set((state) => ({ toggles: { ...state.toggles, ...partial } })),
-  setUI: (partial) => set((state) => ({ ui: { ...state.ui, ...partial } })),
-}));
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      filters: {
+        ageRange: [0, 50],
+        areaRangeHa: [0, 1000],
+        scoreRange: [0, 100],
+        lab: {},
+        indices: { ndvi: false, evi: false, ndre: false, mcari: false, pri: false, ndwi: false, ndmi: false, lswi: false, savi: false, msavi: false },
+        diseases: { alternaria_alternata: false, verticillium_dahliae: false, colletotrichum_acutatum: false },
+        insects: { myzus_persicae: false, cydia_pomonella: false, tetranychus_urticae: false },
+      },
+      toggles: {
+        showOrchards: true,
+        showNdvi: false,
+        showAdmin: true,
+      },
+      ui: { showLeftPanel: true, showRightPanel: false },
+      auth: { isAuthenticated: false },
+      setFilters: (partial) => set((state) => ({ filters: { ...state.filters, ...partial } })),
+      setToggles: (partial) => set((state) => ({ toggles: { ...state.toggles, ...partial } })),
+      setUI: (partial) => set((state) => ({ ui: { ...state.ui, ...partial } })),
+      setAuth: (partial) => set((state) => ({ 
+        auth: { ...state.auth, ...partial } 
+      })),
+      logout: () => set({ auth: { isAuthenticated: false } }),
+    }),
+    {
+      name: 'telagri-app-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ 
+        auth: state.auth,
+        // Only persist auth state, not filters/toggles/ui
+      }),
+    }
+  )
+);
 
 
