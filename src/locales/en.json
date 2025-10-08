@@ -2,13 +2,13 @@
   "app": { "title": "Monitoring of RDA Beneficiaries" },
   "nav": { "dashboard": "Dashboard", "targeting": "Targeting & Impact", "audit": "Audit & Flags" },
   "landing": {
-    "title": "Agricultural Risk Data Analytics",
+    "title": "Agro Portal",
     "subtitle": "Select your portal to access comprehensive agricultural monitoring and analysis tools",
-    "bank": "Bank Portal",
+    "bank": "Banks",
     "bankDesc": "Access portfolio monitoring, risk assessment, and credit analysis tools for agricultural lending",
-    "insurance": "Insurance Portal",
+    "insurance": "Insurance Companies",
     "insuranceDesc": "Monitor insured farms, assess risks, and manage claims with real-time data",
-    "government": "Government Portal",
+    "government": "Government",
     "governmentDesc": "Track RDA beneficiaries, monitor compliance, and analyze program effectiveness",
     "enter": "Enter Portal",
     "footer": "Powered by TelAgri © 2025"
