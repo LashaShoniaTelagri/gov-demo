@@ -24,6 +24,6 @@ aws s3 sync "$ROOT_DIR/dist" "s3://$BUCKET_NAME" --delete
 echo "Creating CloudFront invalidation..."
 aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
 
-echo "Deployment complete: https://gov.telagri.com"
+echo "Deployment complete: https://demo.telagri.com"
 
 

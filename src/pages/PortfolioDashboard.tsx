@@ -38,8 +38,13 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
   // Apply filters
   const filteredFarmers = useMemo(() => {
     return portfolioFarmers.filter((farmer) => {
-      // Risk status filter - if array is empty, show all
+      // Risk status filter from buttons - if array is empty, show all
       if (selectedRiskStatuses.length > 0 && !selectedRiskStatuses.includes(farmer.riskStatus)) {
+        return false;
+      }
+
+      // Risk status filter from dropdown
+      if (filters.riskStatus && farmer.riskStatus !== filters.riskStatus) {
         return false;
       }
 

@@ -121,7 +121,7 @@
    "Properties": {
     "DistributionConfig": {
      "Aliases": [
-      "gov.telagri.com"
+      "demo.telagri.com"
      ],
      "CustomErrorResponses": [
       {
@@ -213,7 +213,7 @@
    }
   },
   "SiteDomain": {
-   "Value": "gov.telagri.com"
+   "Value": "demo.telagri.com"
   }
  },
  "Parameters": {

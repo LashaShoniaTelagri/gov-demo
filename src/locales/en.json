@@ -62,7 +62,7 @@
     "statsLabel": "Portfolio overview",
     "note": "",
     "noteText": "",
-    "highRisk": "HIGH RISK",
+    "highRisk": "High Risk",
     "needsObservation": "Needs Observation",
     "underControl": "Under Control",
     "filters": {
@@ -75,11 +75,15 @@
       "checkUp": "CHECK UP",
       "reset": "Reset Filters",
       "all": "All",
-      "checkupStatus": "status",
-      "statusAll": "All",
-      "statusChecked": "Checked",
-      "statusNotChecked": "Not Checked",
-      "statusInProgress": "In Progress"
+      "status": "Status",
+      "statusHighRisk": "High Risk",
+      "statusNeedsObservation": "Needs Observation",
+      "statusUnderControl": "Under Control",
+      "checkupFilter": "Check Up",
+      "checkupAll": "All",
+      "checkupChecked": "✅ Checked",
+      "checkupNotChecked": "❌ Not Checked",
+      "checkupInProgress": "⌛ In Progress"
     },
     "farmersList": {
       "title": "Farmers List",
@@ -97,7 +101,11 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "successMessage": "Service request submitted successfully!",
-      "total": "Total"
+      "total": "Total",
+      "of": "of",
+      "farmers": "farmers",
+      "previous": "Previous",
+      "next": "Next"
     }
   },
   "map": {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Farmer } from './PortfolioMap';
-import { translateRegion, translateMunicipality } from '../lib/regionTranslations';
+import { translateRegion, translateMunicipality, translateCrop } from '../lib/regionTranslations';
 
 interface FarmersListProps {
   farmers: Farmer[];
@@ -41,12 +41,14 @@ const FarmersList: React.FC<FarmersListProps> = ({
     
     const rows = sortedFarmers.map((farmer) => [
       i18n.language === 'ka' ? `${farmer.name} ${farmer.surname}` : `${farmer.nameEn} ${farmer.surnameEn}`,
-      farmer.crop,
+      translateCrop(farmer.crop, i18n.language),
       `${farmer.area.toFixed(1)} ha`,
       `₾${farmer.loanAmount.toLocaleString()}`,
-      farmer.region,
-      farmer.municipality,
-      farmer.riskStatus,
+      translateRegion(farmer.region, i18n.language),
+      translateMunicipality(farmer.municipality, i18n.language),
+      farmer.riskStatus === 'high' ? t('portfolio.highRisk') : 
+        farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : 
+        t('portfolio.underControl'),
     ]);
 
     const csvContent = [
@@ -106,12 +108,12 @@ const FarmersList: React.FC<FarmersListProps> = ({
                 (farmer) => `
               <tr>
                 <td>${i18n.language === 'ka' ? `${farmer.name} ${farmer.surname}` : `${farmer.nameEn} ${farmer.surnameEn}`}</td>
-                <td>${farmer.crop}</td>
+                <td>${translateCrop(farmer.crop, i18n.language)}</td>
                 <td>${farmer.area.toFixed(1)} ha</td>
                 <td>₾${farmer.loanAmount.toLocaleString()}</td>
-                <td>${farmer.region}</td>
-                <td>${farmer.municipality}</td>
-                <td>${farmer.riskStatus}</td>
+                <td>${translateRegion(farmer.region, i18n.language)}</td>
+                <td>${translateMunicipality(farmer.municipality, i18n.language)}</td>
+                <td>${farmer.riskStatus === 'high' ? t('portfolio.highRisk') : farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : t('portfolio.underControl')}</td>
               </tr>
             `
               )
@@ -213,9 +215,9 @@ const FarmersList: React.FC<FarmersListProps> = ({
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 shadow-lg h-full flex flex-col">
+    <div className="bg-white border-t border-gray-200 shadow-lg">
       {/* Header */}
-      <div className="w-full px-6 py-4 flex items-center justify-between bg-white border-b border-gray-200 flex-shrink-0">
+      <div className="w-full px-6 py-4 flex items-center justify-between bg-white border-b border-gray-200 sticky top-0 z-10">
         <button
           onClick={onToggle}
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -262,7 +264,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
       </div>
 
       {/* Content - Always visible */}
-      <div className="px-6 pb-6 flex-1 overflow-auto">
+      <div className="px-6 pb-20">
           {/* Pagination - Top */}
           {totalPages > 1 && (
             <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg border border-orange-200 flex items-center justify-between shadow-sm">
@@ -270,9 +272,9 @@ const FarmersList: React.FC<FarmersListProps> = ({
                 <span className="text-orange-600 font-semibold">
                   {startIndex + 1}-{Math.min(startIndex + itemsPerPage, farmers.length)}
                 </span>
-                {' '}of{' '}
+                {' '}{t('portfolio.farmersList.of')}{' '}
                 <span className="text-orange-600 font-semibold">{farmers.length}</span>
-                {' '}farmers
+                {' '}{t('portfolio.farmersList.farmers')}
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -284,7 +286,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    Previous
+                    {t('portfolio.farmersList.previous')}
                   </div>
                 </button>
                 <div className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-bold shadow-md">
@@ -296,7 +298,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
                   className="px-4 py-2 rounded-lg bg-white border-2 border-orange-300 text-sm font-semibold text-orange-600 hover:bg-orange-50 hover:border-orange-400 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
                 >
                   <div className="flex items-center gap-1">
-                    Next
+                    {t('portfolio.farmersList.next')}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -395,7 +397,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
                         ? `${farmer.name} ${farmer.surname}`
                         : `${farmer.nameEn} ${farmer.surnameEn}`}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{farmer.crop}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{translateCrop(farmer.crop, i18n.language)}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{farmer.area.toFixed(1)} ha</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
                       ₾{farmer.loanAmount.toLocaleString()}
@@ -410,10 +412,21 @@ const FarmersList: React.FC<FarmersListProps> = ({
                           setSelectedFarmerForRequest(farmer);
                           setShowConfirmModal(true);
                         }}
-                        className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded transition-colors whitespace-nowrap"
+                        className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded transition-colors whitespace-nowrap mb-1"
                       >
                         {t('portfolio.farmersList.requestService')}
                       </button>
+                      <div className="text-[10px] text-gray-500 mt-1 flex items-center gap-1">
+                        {farmer.checkupStatus === 'checked' && (
+                          <span>✅ {t('portfolio.filters.checkupChecked').replace('✅ ', '')}</span>
+                        )}
+                        {farmer.checkupStatus === 'in_progress' && (
+                          <span>⌛ {t('portfolio.filters.checkupInProgress').replace('⌛ ', '')}</span>
+                        )}
+                        {farmer.checkupStatus === 'not_checked' && (
+                          <span>❌ {t('portfolio.filters.checkupNotChecked').replace('❌ ', '')}</span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

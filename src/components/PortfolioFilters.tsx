@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { translateRegion, translateMunicipality } from '../lib/regionTranslations';
+import { translateRegion, translateMunicipality, translateCrop } from '../lib/regionTranslations';
 
 export interface PortfolioFiltersState {
   crop?: string;
@@ -8,6 +8,7 @@ export interface PortfolioFiltersState {
   loanRange: [number, number];
   region?: string;
   municipality?: string;
+  riskStatus?: string;
   checkupStatus?: string;
 }
 
@@ -58,32 +59,6 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
         </h2>
       </div>
 
-      {/* Status Filter */}
-      <div>
-        <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
-          {t('portfolio.filters.checkupStatus')}
-        </label>
-        <div className="relative">
-          <select
-            value={filters.checkupStatus || ''}
-            onChange={(e) => handleFilterChange({ checkupStatus: e.target.value || undefined })}
-            className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
-            style={{ 
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-              backgroundPosition: 'right 0.5rem center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '1.25rem 1.25rem',
-              appearance: 'none'
-            }}
-          >
-            <option value="">{t('portfolio.filters.statusAll')}</option>
-            <option value="checked">{t('portfolio.filters.statusChecked')}</option>
-            <option value="not_checked">{t('portfolio.filters.statusNotChecked')}</option>
-            <option value="in_progress">{t('portfolio.filters.statusInProgress')}</option>
-          </select>
-        </div>
-      </div>
-
       {/* Crop Filter */}
       <div>
         <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
@@ -105,7 +80,7 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
             <option value="">{t('portfolio.filters.all')}</option>
             {availableOptions.crops.map((crop) => (
               <option key={crop} value={crop}>
-                {crop}
+                {translateCrop(crop, i18n.language)}
               </option>
             ))}
           </select>
@@ -258,6 +233,58 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
                 {translateMunicipality(municipality, i18n.language)}
               </option>
             ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Status Filter */}
+      <div>
+        <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
+          {t('portfolio.filters.status')}
+        </label>
+        <div className="relative">
+          <select
+            value={filters.riskStatus || ''}
+            onChange={(e) => handleFilterChange({ riskStatus: e.target.value || undefined })}
+            className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+              backgroundPosition: 'right 0.5rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.25rem 1.25rem',
+              appearance: 'none'
+            }}
+          >
+            <option value="">{t('portfolio.filters.all')}</option>
+            <option value="high">{t('portfolio.filters.statusHighRisk')}</option>
+            <option value="observation">{t('portfolio.filters.statusNeedsObservation')}</option>
+            <option value="controlled">{t('portfolio.filters.statusUnderControl')}</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Check Up Filter */}
+      <div>
+        <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
+          {t('portfolio.filters.checkupFilter')}
+        </label>
+        <div className="relative">
+          <select
+            value={filters.checkupStatus || ''}
+            onChange={(e) => handleFilterChange({ checkupStatus: e.target.value || undefined })}
+            className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+              backgroundPosition: 'right 0.5rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.25rem 1.25rem',
+              appearance: 'none'
+            }}
+          >
+            <option value="">{t('portfolio.filters.checkupAll')}</option>
+            <option value="checked">{t('portfolio.filters.checkupChecked')}</option>
+            <option value="not_checked">{t('portfolio.filters.checkupNotChecked')}</option>
+            <option value="in_progress">{t('portfolio.filters.checkupInProgress')}</option>
           </select>
         </div>
       </div>

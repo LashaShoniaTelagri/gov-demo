@@ -107,3 +107,27 @@ export const translateMunicipality = (municipality: string, language: string): s
   }
   return municipality;
 };
+
+// Crop translations (Georgian to English)
+export const cropTranslations: Record<string, string> = {
+  'ნუში': 'Almond',
+  'ვაშლი': 'Apple',
+  'მსხალი': 'Pear',
+  'ატამი': 'Persimmon',
+  'ალუბალი': 'Sour Cherry',
+  'ბალი': 'Cherry',
+  'ვენახი': 'Grape',
+  'ალუჩა': 'Cherry Plum',
+  'ქლიავი': 'Plum',
+  'მოცვი': 'Blueberry',
+  'კივი': 'Kiwi',
+};
+
+export const translateCrop = (crop: string, language: string): string => {
+  // If English and crop is in Georgian, translate to English
+  if (language === 'en' && cropTranslations[crop]) {
+    return cropTranslations[crop];
+  }
+  // Otherwise return as is (Georgian stays Georgian, English stays English)
+  return crop;
+};

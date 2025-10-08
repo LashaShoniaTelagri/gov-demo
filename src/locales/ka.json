@@ -75,11 +75,15 @@
       "checkUp": "შემოწმება",
       "reset": "ფილტრების გასუფთავება",
       "all": "ყველა",
-      "checkupStatus": "სტატუსი",
-      "statusAll": "ყველა",
-      "statusChecked": "შემოწმებულია",
-      "statusNotChecked": "არ არის შემოწმებული",
-      "statusInProgress": "მიმდინარეობს შემოწმება"
+      "status": "სტატუსი",
+      "statusHighRisk": "მაღალი რისკი",
+      "statusNeedsObservation": "საჭიროებს დაკვირვებას",
+      "statusUnderControl": "კონტროლქვეშ",
+      "checkupFilter": "Check Up",
+      "checkupAll": "ყველა",
+      "checkupChecked": "✅ შემოწმებულია",
+      "checkupNotChecked": "❌ არ არის შემოწმებული",
+      "checkupInProgress": "⌛ მიმდინარეობს შემოწმება"
     },
     "farmersList": {
       "title": "ფერმერების სია",
@@ -97,7 +101,11 @@
       "cancel": "გაუქმება",
       "confirm": "დადასტურება",
       "successMessage": "სერვისის მოთხოვნა წარმატებით გაიგზავნა!",
-      "total": "სულ"
+      "total": "სულ",
+      "of": "-დან",
+      "farmers": "ფერმერი",
+      "previous": "წინა",
+      "next": "შემდეგი"
     }
   },
   "map": {
@@ -107,7 +115,7 @@
     "underControl": "კონტროლის ქვეშ"
   },
   "executive": {
-    "dashboard": "აღმასრულებელი დაშბორდი",
+    "dashboard": "Board-ის დეშბორდი",
     "subtitle": "სტრატეგიული ანალიტიკა და შესრულების მეტრიკები",
     "lastUpdated": "ბოლო განახლება",
     "keyMetrics": "ძირითადი საქმიანობის მაჩვენებლები",
@@ -117,7 +125,7 @@
     "viewDetails": "დეტალების ნახვა",
     "configure": "კონფიგურაცია",
     "exportData": "მონაცემების ექსპორტი",
-    "executiveView": "აღმასრულებელი ხედი",
+    "executiveView": "Board-ის პანელი",
     "portfolioMonitoring": "პორტფელის მონიტორინგი",
     "allPortfolios": "ყველა პორტფელი",
     "cbPortfolio": "CB",

@@ -9,7 +9,7 @@ export class TelagriStaticSiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const domainName = 'gov.telagri.com';
+    const domainName = 'demo.telagri.com';
 
     const bucket = new s3.Bucket(this, 'SiteBucket', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,

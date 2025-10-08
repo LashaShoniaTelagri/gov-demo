@@ -97,12 +97,6 @@ const PortfolioSelect: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
             </svg>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            {t('portfolio.title')}
-          </h1>
-          <p className="text-lg text-gray-600">
-            {t('portfolio.subtitle')}
-          </p>
         </div>
 
         {/* Portfolio Cards */}

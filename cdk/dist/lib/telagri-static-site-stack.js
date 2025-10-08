@@ -42,7 +42,7 @@ const acm = __importStar(require("aws-cdk-lib/aws-certificatemanager"));
 class TelagriStaticSiteStack extends cdk.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
-        const domainName = 'gov.telagri.com';
+        const domainName = 'demo.telagri.com';
         const bucket = new s3.Bucket(this, 'SiteBucket', {
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             encryption: s3.BucketEncryption.S3_MANAGED,
