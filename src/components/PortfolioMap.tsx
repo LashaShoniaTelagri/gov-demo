@@ -18,6 +18,8 @@ export interface Farmer {
   municipality: string;
   lat: number;
   lng: number;
+  checkupStatus?: 'checked' | 'not_checked' | 'in_progress';
+  score?: number;
 }
 
 interface PortfolioMapProps {

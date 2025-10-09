@@ -37,6 +37,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
       t('portfolio.farmersList.region'),
       t('portfolio.farmersList.municipality'),
       t('portfolio.farmersList.status'),
+      t('portfolio.farmersList.score'),
     ];
     
     const rows = sortedFarmers.map((farmer) => [
@@ -49,6 +50,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
       farmer.riskStatus === 'high' ? t('portfolio.highRisk') : 
         farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : 
         t('portfolio.underControl'),
+      farmer.checkupStatus === 'checked' && farmer.score ? farmer.score.toFixed(1) : '-',
     ]);
 
     const csvContent = [
@@ -100,6 +102,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
               <th>${t('portfolio.farmersList.region')}</th>
               <th>${t('portfolio.farmersList.municipality')}</th>
               <th>${t('portfolio.farmersList.status')}</th>
+              <th>${t('portfolio.farmersList.score')}</th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +117,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
                 <td>${translateRegion(farmer.region, i18n.language)}</td>
                 <td>${translateMunicipality(farmer.municipality, i18n.language)}</td>
                 <td>${farmer.riskStatus === 'high' ? t('portfolio.highRisk') : farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : t('portfolio.underControl')}</td>
+                <td>${farmer.checkupStatus === 'checked' && farmer.score ? farmer.score.toFixed(1) : '-'}</td>
               </tr>
             `
               )
@@ -142,6 +146,13 @@ const FarmersList: React.FC<FarmersListProps> = ({
     if (sortField === 'name') {
       aValue = i18n.language === 'ka' ? a.name : a.nameEn;
       bValue = i18n.language === 'ka' ? b.name : b.nameEn;
+    }
+
+    // Handle score sorting (undefined values go to the end)
+    if (sortField === 'score') {
+      const aScore = a.score ?? -Infinity;
+      const bScore = b.score ?? -Infinity;
+      return sortDirection === 'asc' ? aScore - bScore : bScore - aScore;
     }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
@@ -376,6 +387,15 @@ const FarmersList: React.FC<FarmersListProps> = ({
                       <SortIcon field="riskStatus" />
                     </div>
                   </th>
+                  <th
+                    onClick={() => handleSort('score')}
+                    className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      {t('portfolio.farmersList.score')}
+                      <SortIcon field="score" />
+                    </div>
+                  </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     {t('portfolio.farmersList.checkup')}
                   </th>
@@ -405,6 +425,15 @@ const FarmersList: React.FC<FarmersListProps> = ({
                     <td className="px-4 py-3 text-sm text-gray-600">{translateRegion(farmer.region, i18n.language)}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{translateMunicipality(farmer.municipality, i18n.language)}</td>
                     <td className="px-4 py-3 text-sm">{getRiskStatusBadge(farmer.riskStatus)}</td>
+                    <td className="px-4 py-3 text-center">
+                      {farmer.checkupStatus === 'checked' && farmer.score ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
+                          {farmer.score.toFixed(1)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400 text-xs">—</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-sm">
                       <button
                         onClick={(e) => {
@@ -475,12 +504,8 @@ const FarmersList: React.FC<FarmersListProps> = ({
                   // Handle the service request here
                   console.log('Service requested for', selectedFarmerForRequest?.id);
                   setShowConfirmModal(false);
-                  setShowSuccessModal(true);
-                  // Reset after 2 seconds
-                  setTimeout(() => {
-                    setShowSuccessModal(false);
-                    setSelectedFarmerForRequest(null);
-                  }, 2000);
+                  // Redirect to TelAgri dashboard
+                  window.location.href = 'https://dashboard.telagri.com/auth';
                 }}
                 className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
               >

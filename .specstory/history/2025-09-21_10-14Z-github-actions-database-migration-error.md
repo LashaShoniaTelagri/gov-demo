@@ -13795,3 +13795,542 @@ The issue was that the last farmer row was being cut off at the bottom of the sc
 
 ---
 
+_**User (2025-10-06 15:06Z)**_
+
+remove all descriptions for each card in first page, like remove description under ⁠ Government ⁠, adjust Georgian language version as well.
+
+---
+
+_**Assistant (claude-4.5-sonnet-thinking)**_
+
+I'll remove the descriptions from the landing page cards and adjust both English and Georgian versions:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx
+
+---
+
+Now I'll remove the description section from the landing page:
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx</summary>
+
+**Chunk 1**
+Lines added: undefined, lines removed: 1
+
+```diff
+@@ -16,5 +16,4 @@
+        id: 'bank',
+        title: t('landing.bank'),
+-       description: t('landing.bankDesc'),
+        icon: (
+          <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+```
+
+**Chunk 2**
+Lines added: undefined, lines removed: 1
+
+```diff
+@@ -28,5 +27,4 @@
+        id: 'insurance',
+        title: t('landing.insurance'),
+-       description: t('landing.insuranceDesc'),
+        icon: (
+          <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+```
+
+**Chunk 3**
+Lines added: undefined, lines removed: 1
+
+```diff
+@@ -40,5 +38,4 @@
+        id: 'government',
+        title: t('landing.government'),
+-       description: t('landing.governmentDesc'),
+        icon: (
+          <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+```
+
+</details>
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 6
+
+```diff
+@@ -107,12 +107,7 @@
+  
+                {/* Title */}
+-               <h2 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
++               <h2 className="text-2xl font-bold text-gray-800 mb-6 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+                  {portal.title}
+                </h2>
+- 
+-               {/* Description */}
+-               <p className="text-gray-600 leading-relaxed">
+-                 {portal.description}
+-               </p>
+  
+                {/* Arrow Icon */}
+```
+
+</details>
+
+---
+
+Tool use: **run_terminal_cmd**
+
+```bash
+npm run build
+```
+
+```
+> rda-demo@0.0.1 build
+> vite build
+
+vite v5.4.20 building for production...
+✓ 942 modules transformed.
+dist/index.html                   0.61 kB │ gzip:   0.39 kB
+dist/assets/index-DsqTJVR-.css   57.53 kB │ gzip:  13.66 kB
+dist/assets/index-NVznRuXN.js   970.89 kB │ gzip: 271.13 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks                              
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.89s
+```
+
+---
+
+Perfect! ✅ **Removed all descriptions from the landing page portal cards!**
+
+## 🎯 Changes Made:
+
+### **1. Removed Description Property**
+- Removed `description: t('landing.bankDesc')` from the Bank portal
+- Removed `description: t('landing.insuranceDesc')` from the Insurance portal  
+- Removed `description: t('landing.governmentDesc')` from the Government portal
+
+### **2. Removed Description Display**
+- Removed the entire "Description" section with the paragraph element:
+  ```tsx
+  <p className="text-gray-600 leading-relaxed">
+    {portal.description}
+  </p>
+  ```
+
+### **3. Adjusted Spacing**
+- Changed title margin from `mb-3` to `mb-6` to maintain better visual balance without the description text
+
+### **Result:**
+The landing page now shows cleaner, more focused portal cards with just:
+- Icon
+- Title (Bank Portal / Insurance Portal / Government Portal)
+- "Enter" button with arrow
+
+This works for both English and Georgian versions since we're no longer rendering the description translations! 🎨✨
+
+---
+
+_**User (2025-10-06 15:07Z)**_
+
+Remove description under `Agro Portal` as well
+
+---
+
+_**Assistant (claude-4.5-sonnet-thinking)**_
+
+Let me check if there's an "Agro Portal" in the code and remove its description:
+
+---
+
+Tool use: **grep**
+
+---
+
+I see "Agro Portal" is just the title in the header section. Let me check if there's a subtitle/description with it:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/locales/en.json
+
+---
+
+I see! You want to remove the subtitle under "Agro Portal" on the landing page. Let me update both the component and translations:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/Landing.tsx</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 4
+
+```diff
+@@ -81,10 +81,7 @@
+          {/* Header */}
+          <div className="text-center mb-12 animate-fade-in">
+-           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
++           <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
+              {t('landing.title')}
+            </h1>
+-           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+-             {t('landing.subtitle')}
+-           </p>
+          </div>
+  
+```
+
+</details>
+
+---
+
+Tool use: **run_terminal_cmd**
+
+```bash
+npm run build
+```
+
+```
+> rda-demo@0.0.1 build
+> vite build
+
+vite v5.4.20 building for production...
+✓ 942 modules transformed.
+dist/index.html                   0.61 kB │ gzip:   0.38 kB
+dist/assets/index-c1KefUWW.css   57.45 kB │ gzip:  13.65 kB
+dist/assets/index-BModWMdT.js   970.77 kB │ gzip: 271.11 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks                              
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.25s
+```
+
+---
+
+Perfect! ✅ **Removed the subtitle/description under "Agro Portal"!**
+
+## 🎯 Changes Made:
+
+### **Removed the Subtitle Section**
+- Removed the entire paragraph element that displayed the subtitle:
+  ```tsx
+  <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+    {t('landing.subtitle')}
+  </p>
+  ```
+
+### **Simplified Header**
+- Now the header section only shows the "Agro Portal" title without any description text below it
+- Removed the `mb-4` margin from the h1 since there's no subtitle following it
+
+### **Result:**
+The landing page now has a cleaner, more minimalist look with:
+- Just the "Agro Portal" title at the top
+- Three portal cards (Banks, Insurance Companies, Government) without descriptions
+- Works perfectly in both English and Georgian! 🎨✨
+
+---
+
+_**User (2025-10-07 02:15Z)**_
+
+On this page when i choose one of the boxes, none of the boxes number and percentage should disappear, but i should only be able to see the dots from the box that i choose. This change should be applied on the Georgian and English version of this page too
+
+---
+
+_**Assistant (claude-4.5-sonnet-thinking)**_
+
+I understand! You want the risk status filter buttons (High Risk, Needs Observation, Under Control) to remain visible with their numbers and percentages even when one is selected, but only the dots/farmers from the selected status should be shown on the map and list. Let me fix this:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/components/RiskStatusFilters.tsx
+
+---
+
+The component is already set up correctly - it always shows all buttons with their counts and percentages. The issue is in how we're calculating the counts in `PortfolioDashboard.tsx`. The counts should always be based on the full portfolio, not the filtered data. Let me check and fix this:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/PortfolioDashboard.tsx
+
+---
+
+I found the issue! The `riskCounts` is calculated from `filteredFarmers`, but it should be calculated from `portfolioFarmers` (the unfiltered data) so the counts always show the total numbers regardless of which status is selected. Let me fix this:
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/pages/PortfolioDashboard.tsx</summary>
+
+**Chunk 1**
+Lines added: 5, lines removed: 5
+
+```diff
+@@ -103,12 +103,12 @@
+    }, [portfolioFarmers, filters.region]);
+  
+-   // Count farmers by risk status
++   // Count farmers by risk status - always from portfolio (not filtered)
+    const riskCounts = useMemo(() => {
+      return {
+-       high: filteredFarmers.filter((f) => f.riskStatus === 'high').length,
+-       observation: filteredFarmers.filter((f) => f.riskStatus === 'observation').length,
+-       controlled: filteredFarmers.filter((f) => f.riskStatus === 'controlled').length,
++       high: portfolioFarmers.filter((f) => f.riskStatus === 'high').length,
++       observation: portfolioFarmers.filter((f) => f.riskStatus === 'observation').length,
++       controlled: portfolioFarmers.filter((f) => f.riskStatus === 'controlled').length,
+      };
+-   }, [filteredFarmers]);
++   }, [portfolioFarmers]);
+  
+    const handleRiskStatusToggle = (status: 'high' | 'observation' | 'controlled') => {
+```
+
+</details>
+
+---
+
+Tool use: **run_terminal_cmd**
+
+```bash
+npm run build
+```
+
+```
+> rda-demo@0.0.1 build
+> vite build
+
+vite v5.4.20 building for production...
+✓ 942 modules transformed.
+dist/index.html                   0.61 kB │ gzip:   0.38 kB
+dist/assets/index-c1KefUWW.css   57.45 kB │ gzip:  13.65 kB
+dist/assets/index-Dq4Ej8j7.js   970.77 kB │ gzip: 271.11 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks                              
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.92s
+```
+
+---
+
+Perfect! ✅ **Fixed the risk status buttons to always show total counts!**
+
+## 🎯 What Changed:
+
+### **Before:**
+The counts were calculated from `filteredFarmers`, which meant:
+- When you selected "High Risk", it would show only high-risk count
+- The other buttons' numbers would disappear or show 0
+
+### **After:**
+The counts are now calculated from `portfolioFarmers` (the full portfolio before any filtering), which means:
+- **All three buttons always show their total counts and percentages**
+- When you click "High Risk" (4 farmers), it shows only those 4 red dots on the map
+- But the other buttons still display their full counts:
+  - "Needs Observation" still shows 30 (50%)
+  - "Under Control" still shows 26 (43.3%)
+
+### **Behavior:**
+1. **By default**: All farmers are visible (all dots on map)
+2. **Click "High Risk"**: Only red dots appear, but all buttons remain visible with their full counts
+3. **Click the selected button again**: Deselects it and shows all farmers again
+4. **Works in both Georgian and English** ✅
+
+The filtering still works perfectly - only the selected status farmers appear on the map and list, but the buttons always show the complete portfolio statistics! 🎯📊
+
+---
+
+_**User (2025-10-07 02:15Z)**_
+
+change the word, ⁠ Confirm ⁠ to the word ⁠ Continue ⁠ and  ⁠change, ⁠ დადასტურება ⁠ to ⁠ შემდეგი ⁠, after clicking on ⁠ Continue ⁠ redirect to the page : https://dashboard.telagri.com/auth 
+
+
+---
+
+_**Assistant (claude-4.5-sonnet-thinking)**_
+
+I'll update the confirmation modal button text and add the redirect functionality:
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/locales/en.json</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -100,5 +100,5 @@
+        "confirmMessage": "Are you sure you want to request a checkup service for this farmer?",
+        "cancel": "Cancel",
+-       "confirm": "Confirm",
++       "confirm": "Continue",
+        "successMessage": "Service request submitted successfully!",
+        "total": "Total",
+```
+
+</details>
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/locales/ka.json</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -100,5 +100,5 @@
+        "confirmMessage": "დარწმუნებული ხართ, რომ გსურთ ამ ფერმერისთვის შემოწმების სერვისის მოთხოვნა?",
+        "cancel": "გაუქმება",
+-       "confirm": "დადასტურება",
++       "confirm": "შემდეგი",
+        "successMessage": "სერვისის მოთხოვნა წარმატებით გაიგზავნა!",
+        "total": "სულ",
+```
+
+</details>
+
+---
+
+Now let me update the FarmersList component to redirect to the TelAgri dashboard after clicking Continue:
+
+---
+
+Tool use: **read_file**
+
+Read file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/components/FarmersList.tsx
+
+---
+
+Tool use: **search_replace**
+
+
+<details><summary>Edit file: /Users/lasha/Desktop/TelAgri/tech/gitlab/new-system/rda-demo/src/components/FarmersList.tsx</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 6
+
+```diff
+@@ -476,10 +476,6 @@
+                    console.log('Service requested for', selectedFarmerForRequest?.id);
+                    setShowConfirmModal(false);
+-                   setShowSuccessModal(true);
+-                   // Reset after 2 seconds
+-                   setTimeout(() => {
+-                     setShowSuccessModal(false);
+-                     setSelectedFarmerForRequest(null);
+-                   }, 2000);
++                   // Redirect to TelAgri dashboard
++                   window.location.href = 'https://dashboard.telagri.com/auth';
+                  }}
+                  className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
+```
+
+</details>
+
+---
+
+Tool use: **run_terminal_cmd**
+
+```bash
+npm run build
+```
+
+```
+> rda-demo@0.0.1 build
+> vite build
+
+vite v5.4.20 building for production...
+✓ 942 modules transformed.
+dist/index.html                   0.61 kB │ gzip:   0.39 kB
+dist/assets/index-c1KefUWW.css   57.45 kB │ gzip:  13.65 kB
+dist/assets/index-C4E4ETZx.js   970.78 kB │ gzip: 271.13 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks                              
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.44s
+```
+
+---
+
+Perfect! ✅ **Updated the confirmation modal button and added redirect functionality!**
+
+## 🎯 Changes Made:
+
+### **1. Updated Button Text in Translations**
+
+**English (`en.json`):**
+- Changed `"confirm": "Confirm"` → `"confirm": "Continue"`
+
+**Georgian (`ka.json`):**
+- Changed `"confirm": "დადასტურება"` → `"confirm": "შემდეგი"`
+
+### **2. Added Redirect Functionality**
+
+Updated the `FarmersList.tsx` component:
+- Removed the success modal flow
+- Added direct redirect to `https://dashboard.telagri.com/auth` when clicking the Continue/შემდეგი button
+- Used `window.location.href` for a full page redirect
+
+### **Result:**
+
+Now when a user:
+1. Clicks "Request Service" button
+2. The confirmation modal opens asking "Are you sure you want to request a checkup service for this farmer?"
+3. Shows farmer details (name, crop, area)
+4. Two buttons appear:
+   - **Cancel** / **გაუქმება** (closes modal)
+   - **Continue** / **შემდეგი** (redirects to TelAgri dashboard auth page)
+
+Works perfectly in both English and Georgian! 🚀✨
+
+---
+

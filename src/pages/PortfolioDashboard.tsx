@@ -102,14 +102,14 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
     return { crops, regions, municipalities };
   }, [portfolioFarmers, filters.region]);
 
-  // Count farmers by risk status
+  // Count farmers by risk status - always from portfolio (not filtered)
   const riskCounts = useMemo(() => {
     return {
-      high: filteredFarmers.filter((f) => f.riskStatus === 'high').length,
-      observation: filteredFarmers.filter((f) => f.riskStatus === 'observation').length,
-      controlled: filteredFarmers.filter((f) => f.riskStatus === 'controlled').length,
+      high: portfolioFarmers.filter((f) => f.riskStatus === 'high').length,
+      observation: portfolioFarmers.filter((f) => f.riskStatus === 'observation').length,
+      controlled: portfolioFarmers.filter((f) => f.riskStatus === 'controlled').length,
     };
-  }, [filteredFarmers]);
+  }, [portfolioFarmers]);
 
   const handleRiskStatusToggle = (status: 'high' | 'observation' | 'controlled') => {
     setSelectedRiskStatuses((prev) => {
