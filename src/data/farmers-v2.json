@@ -1020,7 +1020,8 @@
     "municipality": "Tskaltubo",
     "lat": 42.0734,
     "lng": 43.0285,
-    "checkupStatus": "checked"
+    "checkupStatus": "checked",
+    "score": 4.6
   },
   {
     "id": "F057",
@@ -1056,7 +1057,8 @@
     "municipality": "Telavi",
     "lat": 41.8132,
     "lng": 46.3323,
-    "checkupStatus": "checked"
+    "checkupStatus": "checked",
+    "score": 5.2
   },
   {
     "id": "F059",

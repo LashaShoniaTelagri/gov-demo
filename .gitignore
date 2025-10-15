@@ -25,6 +25,10 @@ pnpm-debug.log*
 .vscode/
 .idea/
 
+# Cursor MCP Configuration (contains sensitive tokens)
+# Note: Keep mcp.json.template for team sharing
+.cursor/mcp.json
+
 # Coverage / reports
 coverage/
 .nyc_output/

@@ -20,7 +20,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useState<keyof Farmer>('name');
+  const [sortField, setSortField] = useState<keyof Farmer>('company');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const itemsPerPage = 10;
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -30,7 +30,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
   // Export to Excel (CSV)
   const exportToExcel = () => {
     const headers = [
-      t('portfolio.farmersList.name'),
+      t('portfolio.farmersList.company'),
       t('portfolio.farmersList.crop'),
       t('portfolio.farmersList.area'),
       t('portfolio.farmersList.loanAmount'),
@@ -41,7 +41,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
     ];
     
     const rows = sortedFarmers.map((farmer) => [
-      i18n.language === 'ka' ? `${farmer.name} ${farmer.surname}` : `${farmer.nameEn} ${farmer.surnameEn}`,
+      farmer.company,
       translateCrop(farmer.crop, i18n.language),
       `${farmer.area.toFixed(1)} ha`,
       `₾${farmer.loanAmount.toLocaleString()}`,
@@ -95,7 +95,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
         <table>
           <thead>
             <tr>
-              <th>${t('portfolio.farmersList.name')}</th>
+              <th>${t('portfolio.farmersList.company')}</th>
               <th>${t('portfolio.farmersList.crop')}</th>
               <th>${t('portfolio.farmersList.area')}</th>
               <th>${t('portfolio.farmersList.loanAmount')}</th>
@@ -110,7 +110,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
               .map(
                 (farmer) => `
               <tr>
-                <td>${i18n.language === 'ka' ? `${farmer.name} ${farmer.surname}` : `${farmer.nameEn} ${farmer.surnameEn}`}</td>
+                <td>${farmer.company}</td>
                 <td>${translateCrop(farmer.crop, i18n.language)}</td>
                 <td>${farmer.area.toFixed(1)} ha</td>
                 <td>₾${farmer.loanAmount.toLocaleString()}</td>
@@ -325,12 +325,12 @@ const FarmersList: React.FC<FarmersListProps> = ({
               <thead>
                 <tr className="border-b-2 border-gray-200">
                   <th
-                    onClick={() => handleSort('name')}
+                    onClick={() => handleSort('company')}
                     className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                   >
                     <div className="flex items-center gap-2">
-                      {t('portfolio.farmersList.name')}
-                      <SortIcon field="name" />
+                      {t('portfolio.farmersList.company')}
+                      <SortIcon field="company" />
                     </div>
                   </th>
                   <th
@@ -413,9 +413,7 @@ const FarmersList: React.FC<FarmersListProps> = ({
                     }`}
                   >
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                      {i18n.language === 'ka'
-                        ? `${farmer.name} ${farmer.surname}`
-                        : `${farmer.nameEn} ${farmer.surnameEn}`}
+                      {farmer.company}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{translateCrop(farmer.crop, i18n.language)}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{farmer.area.toFixed(1)} ha</td>
@@ -478,14 +476,11 @@ const FarmersList: React.FC<FarmersListProps> = ({
               <div className="mb-6 p-3 bg-gray-50 rounded border border-gray-200">
                 <p className="text-sm text-gray-700">
                   <span className="font-semibold">
-                    {i18n.language === 'ka' 
-                      ? `${selectedFarmerForRequest.name} ${selectedFarmerForRequest.surname}`
-                      : `${selectedFarmerForRequest.nameEn} ${selectedFarmerForRequest.surnameEn}`
-                    }
+                    {selectedFarmerForRequest.company}
                   </span>
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {selectedFarmerForRequest.crop} • {selectedFarmerForRequest.area.toFixed(1)} ha
+                  {translateCrop(selectedFarmerForRequest.crop, i18n.language)} • {selectedFarmerForRequest.area.toFixed(1)} ha
                 </p>
               </div>
             )}

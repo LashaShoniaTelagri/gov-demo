@@ -95,7 +95,12 @@ export const useAppStore = create<AppState>()(
       setAuth: (partial) => set((state) => ({ 
         auth: { ...state.auth, ...partial } 
       })),
-      logout: () => set({ auth: { isAuthenticated: false } }),
+      logout: () => {
+        // Clear alert settings from localStorage
+        localStorage.removeItem('riskTrendAlerts');
+        // Reset auth state
+        set({ auth: { isAuthenticated: false } });
+      },
     }),
     {
       name: 'telagri-app-storage',

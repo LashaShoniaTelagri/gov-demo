@@ -97,18 +97,12 @@ const Login: React.FC = () => {
           
           <button 
             onClick={toggleLang} 
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-blue-500 hover:text-blue-600 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+            className="inline-flex items-center justify-center w-12 h-12 rounded-lg border-2 border-gray-300 hover:border-blue-500 hover:bg-white transition-all duration-200 shadow-sm hover:shadow-md"
           >
             {i18n.language === 'ka' ? (
-              <>
-                <span className="text-xl">🇬🇧</span>
-                <span>{t('lang.en')}</span>
-              </>
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded bg-blue-600 text-white text-sm font-bold">EN</span>
             ) : (
-              <>
-                <span className="text-xl">🇬🇪</span>
-                <span>{t('lang.ka')}</span>
-              </>
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded bg-red-600 text-white text-sm font-bold">KA</span>
             )}
           </button>
         </div>

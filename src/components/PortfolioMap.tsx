@@ -53,7 +53,7 @@ const PortfolioMap: React.FC<PortfolioMapProps> = ({
         maxZoom: 18,
       }).addTo(map);
 
-      // Add glow effect CSS for high-risk markers
+      // Add CSS for high-risk markers
       const style = document.createElement('style');
       style.textContent = `
         .high-risk-marker {
@@ -94,18 +94,17 @@ const PortfolioMap: React.FC<PortfolioMapProps> = ({
       };
       const color = colors[farmer.riskStatus];
 
-      // Smaller, more accurate radius with visual distinction for high risk
-      const baseRadius = isHighRisk ? 5 : 4;
-      const radius = isSelected ? baseRadius * 1.5 : baseRadius;
+      // Same size for all markers - more visible
+      const radius = isSelected ? 7.5 : 6;
 
       // Create circle marker
       const marker = L.circleMarker([farmer.lat, farmer.lng], {
         radius: radius,
         fillColor: color,
-        color: isHighRisk ? '#dc2626' : '#ffffff', // Darker red border for high risk
-        weight: isHighRisk ? 2.5 : (isSelected ? 2 : 1.5),
+        color: '#ffffff',
+        weight: isSelected ? 2.5 : 2,
         opacity: 1,
-        fillOpacity: isSelected ? 1 : (isHighRisk ? 0.95 : 0.85),
+        fillOpacity: isSelected ? 1 : 0.9,
         className: isHighRisk ? 'high-risk-marker' : '',
       });
 

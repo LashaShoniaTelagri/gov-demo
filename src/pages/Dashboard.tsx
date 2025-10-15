@@ -8,7 +8,8 @@ import ExecutiveMetrics from '../components/ExecutiveMetrics';
 import ExecutiveCharts from '../components/ExecutiveCharts';
 import PortfolioDashboard from './PortfolioDashboard';
 import PortfolioSummary from '../components/PortfolioSummary';
-import QualityRiskOverview from '../components/QualityRiskOverview';
+import { RiskStatus, Monitoring } from '../components/QualityRiskOverview';
+import ScoresPerCrop from '../components/ScoresPerCrop';
 import { useAppStore } from '../lib/store';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +36,7 @@ const Dashboard: React.FC = () => {
     // Show portfolio monitoring view if selected
     if (boardView === 'portfolio') {
       return (
-        <div className="h-screen flex flex-col overflow-hidden">
+        <div className="h-screen flex flex-col">
           {/* View Toggle */}
           <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
             <div className="flex items-center justify-between">
@@ -87,7 +88,7 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex-1 overflow-hidden min-h-0">
+          <div className="flex-1 min-h-0">
             <PortfolioDashboard portfolioFilter={portfolioTab} />
           </div>
         </div>
@@ -96,7 +97,7 @@ const Dashboard: React.FC = () => {
     
     // Show executive metrics view
     return (
-      <div className="h-[calc(100vh-56px)] overflow-y-auto">
+      <div className="h-[calc(100vh-56px)]">
         <div className="max-w-[1920px] mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
           {/* View Toggle */}
           <div className="flex gap-4 mb-6">
@@ -114,10 +115,11 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          {/* Portfolio Summary */}
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">{t('executive.portfolioSummary')}</h2>
+          {/* Portfolio Overview */}
+          <div className="space-y-8">
+            {/* Filter buttons moved to top */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-800">{t('executive.portfolioOverview')}</h2>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPortfolioTab('all')}
@@ -151,13 +153,31 @@ const Dashboard: React.FC = () => {
                 </button>
               </div>
             </div>
-            <PortfolioSummary portfolioFilter={portfolioTab} />
-          </div>
 
-          {/* Quality & Risk Overview */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('executive.qualityRiskOverview')}</h2>
-            <QualityRiskOverview portfolioFilter={portfolioTab} />
+            {/* Layout: 2-Column Grid - Risk Status & Monitoring LEFT, Cards RIGHT */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* LEFT Column: Risk Status + Monitoring stacked */}
+              <div className="space-y-6">
+                {/* Risk Status */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-bold text-gray-800 mb-6">{t('executive.riskStatus')}</h3>
+                  <RiskStatus portfolioFilter={portfolioTab} />
+                </div>
+                {/* Monitoring */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-bold text-gray-800 mb-6">{t('executive.monitoring')}</h3>
+                  <Monitoring portfolioFilter={portfolioTab} />
+                </div>
+              </div>
+
+              {/* RIGHT Column: Summary Cards + Scores per Crop stacked */}
+              <div className="space-y-6">
+                {/* Portfolio Summary */}
+                <PortfolioSummary portfolioFilter={portfolioTab} />
+                {/* Scores per Crop */}
+                <ScoresPerCrop portfolioFilter={portfolioTab} />
+              </div>
+            </div>
           </div>
 
           {/* Quick Actions - Only Export Data */}
@@ -228,7 +248,7 @@ const Dashboard: React.FC = () => {
 
       {/* Map section */}
       <section className={`${ui.showLeftPanel ? (ui.showRightPanel ? 'sm:col-span-6' : 'sm:col-span-9') : (ui.showRightPanel ? 'sm:col-span-8' : 'sm:col-span-11')} relative min-h-[60vh] sm:min-h-0`}>
-        <div className="h-full rounded-lg overflow-hidden border border-gray-200 relative">
+        <div className="h-full rounded-lg border border-gray-200 relative">
           <Map />
           {/* Mobile overlay drawer when an orchard is selected */}
           <div className="sm:hidden">

@@ -100,17 +100,11 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 {auth.email}
               </span>
             )}
-            <button onClick={toggleLang} className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+            <button onClick={toggleLang} className="inline-flex items-center justify-center w-10 h-10 rounded border border-gray-300 hover:bg-gray-50 transition-colors">
               {i18n.language === 'ka' ? (
-                <>
-                  <span>🇬🇧</span>
-                  <span>{t('lang.en')}</span>
-                </>
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-blue-600 text-white text-xs font-bold">EN</span>
               ) : (
-                <>
-                  <span>🇬🇪</span>
-                  <span>{t('lang.ka')}</span>
-                </>
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-red-600 text-white text-xs font-bold">KA</span>
               )}
             </button>
             <button 

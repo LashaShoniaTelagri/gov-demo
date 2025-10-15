@@ -3,6 +3,7 @@ import RiskStatusFilters from '../components/RiskStatusFilters';
 import PortfolioFilters, { PortfolioFiltersState } from '../components/PortfolioFilters';
 import PortfolioMap, { Farmer } from '../components/PortfolioMap';
 import FarmersList from '../components/FarmersList';
+import RiskTrendChart from '../components/RiskTrendChart';
 import { useAppStore } from '../lib/store';
 import farmersData from '../data/farmers-v2.json';
 
@@ -23,6 +24,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
   const [isFarmersListOpen, setIsFarmersListOpen] = useState(false); // false = 30%, true = 80%
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeView, setActiveView] = useState<'map' | 'chart'>('map');
 
   // Filter farmers by portfolio
   const portfolioFarmers = useMemo(() => {
@@ -102,14 +104,59 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
     return { crops, regions, municipalities };
   }, [portfolioFarmers, filters.region]);
 
-  // Count farmers by risk status - always from portfolio (not filtered)
+  // Apply all filters EXCEPT risk status button filter to get base for risk counts
+  const farmersForRiskCount = useMemo(() => {
+    return portfolioFarmers.filter((farmer) => {
+      // Risk status filter from dropdown (not from buttons)
+      if (filters.riskStatus && farmer.riskStatus !== filters.riskStatus) {
+        return false;
+      }
+
+      // Checkup Status filter
+      if (filters.checkupStatus && farmer.checkupStatus !== filters.checkupStatus) {
+        return false;
+      }
+
+      // Crop filter
+      if (filters.crop && farmer.crop !== filters.crop) {
+        return false;
+      }
+
+      // Area filter
+      if (farmer.area < filters.areaRange[0] || farmer.area > filters.areaRange[1]) {
+        return false;
+      }
+
+      // Loan filter
+      if (
+        farmer.loanAmount < filters.loanRange[0] ||
+        farmer.loanAmount > filters.loanRange[1]
+      ) {
+        return false;
+      }
+
+      // Region filter
+      if (filters.region && farmer.region !== filters.region) {
+        return false;
+      }
+
+      // Municipality filter
+      if (filters.municipality && farmer.municipality !== filters.municipality) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [portfolioFarmers, filters]);
+
+  // Count farmers by risk status - based on filtered data (excluding risk status button filter)
   const riskCounts = useMemo(() => {
     return {
-      high: portfolioFarmers.filter((f) => f.riskStatus === 'high').length,
-      observation: portfolioFarmers.filter((f) => f.riskStatus === 'observation').length,
-      controlled: portfolioFarmers.filter((f) => f.riskStatus === 'controlled').length,
+      high: farmersForRiskCount.filter((f) => f.riskStatus === 'high').length,
+      observation: farmersForRiskCount.filter((f) => f.riskStatus === 'observation').length,
+      controlled: farmersForRiskCount.filter((f) => f.riskStatus === 'controlled').length,
     };
-  }, [portfolioFarmers]);
+  }, [farmersForRiskCount]);
 
   const handleRiskStatusToggle = (status: 'high' | 'observation' | 'controlled') => {
     setSelectedRiskStatuses((prev) => {
@@ -126,12 +173,46 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Risk Status Filters - Hidden when farmers list is expanded (80%) */}
       {!isFarmersListOpen && (
-        <RiskStatusFilters
-          selectedStatuses={selectedRiskStatuses}
-          onStatusToggle={handleRiskStatusToggle}
-          counts={riskCounts}
-          totalCount={portfolioFarmers.length}
-        />
+        <>
+          <RiskStatusFilters
+            selectedStatuses={selectedRiskStatuses}
+            onStatusToggle={handleRiskStatusToggle}
+            counts={riskCounts}
+            totalCount={farmersForRiskCount.length}
+          />
+          
+          {/* View Tabs */}
+          <div className="px-6 pt-4 pb-2">
+            <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg inline-flex">
+              <button
+                onClick={() => setActiveView('map')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
+                  activeView === 'map'
+                    ? 'bg-white text-orange-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                Map View
+              </button>
+              <button
+                onClick={() => setActiveView('chart')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
+                  activeView === 'chart'
+                    ? 'bg-white text-orange-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
+                Chart View
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Main Content */}
@@ -172,24 +253,32 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
           </div>
         </div>
 
-        {/* Map Area */}
+        {/* Map/Chart Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className={`relative transition-all duration-300 ${isFarmersListOpen ? 'h-[20%]' : 'h-[70%]'}`}>
-            <PortfolioMap
-              farmers={filteredFarmers}
-              selectedFarmerId={selectedFarmerId}
-              onFarmerSelect={setSelectedFarmerId}
-            />
-            {/* Fullscreen Button */}
-            <button
-              onClick={() => setIsFullscreen(true)}
-              className="absolute top-4 right-4 z-[500] bg-white hover:bg-gray-100 text-gray-700 p-2 rounded shadow-lg transition-colors border border-gray-300"
-              title="Fullscreen Map"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-              </svg>
-            </button>
+            {activeView === 'map' ? (
+              <>
+                <PortfolioMap
+                  farmers={filteredFarmers}
+                  selectedFarmerId={selectedFarmerId}
+                  onFarmerSelect={setSelectedFarmerId}
+                />
+                {/* Fullscreen Button */}
+                <button
+                  onClick={() => setIsFullscreen(true)}
+                  className="absolute top-4 right-4 z-[500] bg-white hover:bg-gray-100 text-gray-700 p-2 rounded shadow-lg transition-colors border border-gray-300"
+                  title="Fullscreen Map"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <div className="h-full overflow-auto p-6 bg-gray-50">
+                <RiskTrendChart filteredFarmers={farmersForRiskCount} />
+              </div>
+            )}
           </div>
 
           {/* Farmers List */}

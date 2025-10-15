@@ -11,6 +11,7 @@
     "government": "Government",
     "governmentDesc": "Track RDA beneficiaries, monitor compliance, and analyze program effectiveness",
     "enter": "Enter Portal",
+    "comingSoon": "Coming Soon",
     "footer": "Powered by TelAgri © 2025"
   },
   "login": {
@@ -88,6 +89,7 @@
     "farmersList": {
       "title": "Farmers List",
       "name": "Name",
+      "company": "Company",
       "crop": "Crop",
       "area": "Area",
       "loanAmount": "Loan Amount",
@@ -132,14 +134,17 @@
     "cbPortfolio": "CB",
     "smePortfolio": "SME",
     "portfolioSummary": "Portfolio Summary",
+    "portfolioOverview": "Portfolio Overview",
     "qualityRiskOverview": "Quality & Risk Overview",
+    "monitoring": "Monitoring",
     "totalUsers": "Total Users",
     "crops": "Crops",
     "regions": "Regions",
     "totalArea": "Total Area",
+    "totalLoanAmount": "Total Loan Amount",
     "riskStatus": "Risk Status",
     "checkUpStatus": "Check Up Status",
-    "scoresPerCrop": "Scores per Crop",
+    "scoresPerCrop": "Checked-Up Farmers’ Scores per Crop",
     "selectCrop": "Select Crop:",
     "allCrops": "All Crops",
     "farmers": "farmers",
@@ -186,6 +191,18 @@
     "compliance": "Compliance",
     "claimsCount": "Claims Count",
     "amountM": "Amount (₾M)"
+  },
+  "riskTrend": {
+    "title": "Risk Trend Analysis",
+    "subtitle": "Monitor risk distribution over time and set custom alerts",
+    "manageAlerts": "Manage Alerts",
+    "alertSettings": "Alert Settings",
+    "alertDescription": "Set percentage thresholds for each risk category. You'll be notified when any category exceeds its threshold.",
+    "alertsTriggered": "⚠️ Alerts Triggered",
+    "exceeds": "exceeds threshold of",
+    "thresholdPercentage": "Alert Threshold",
+    "percentage": "Percentage (%)",
+    "saveSettings": "Save Settings"
   }
 }
 
