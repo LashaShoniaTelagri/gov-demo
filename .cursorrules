@@ -1,0 +1,311 @@
+# RDA Demo Project - Development Rules
+
+## Project Overview
+This is a React + TypeScript + Vite AgriTech monitoring application for tracking RDA beneficiaries, bank portfolios, and farm risk assessment.
+
+## Design System & Theme
+
+### Color Palette
+**Primary Colors:**
+- **Orange** (Primary Actions): `#f97316` (orange-500), `#ea580c` (orange-600), `#c2410c` (orange-700)
+- **Green** (Success/Controlled): `#10b981` (emerald-500), `#059669` (emerald-600), `#047857` (emerald-700)
+- **Red** (Risk/Danger): `#ef4444` (red-500), `#dc2626` (red-600), `#b91c1c` (red-700)
+- **Yellow** (Warning/Observation): `#fbbf24` (amber-400), `#f59e0b` (amber-500)
+- **Blue** (Info/Branding): `#3b82f6` (blue-500), `#2563eb` (blue-600), `#1d4ed8` (blue-700)
+
+**Neutral Colors:**
+- **White**: `#ffffff` for backgrounds
+- **Gray Scale**: `#f9fafb` (gray-50) to `#111827` (gray-900) for text and borders
+
+**Brand Colors (defined in tailwind.config.js):**
+```javascript
+brand: {
+  DEFAULT: '#2e7d32',
+  light: '#4caf50',
+  dark: '#1b5e20'
+}
+```
+
+### Theme Consistency Rules
+1. **Always use the defined color palette** - Never introduce colors that don't match the scheme
+2. **Primary action buttons**: Use orange (`bg-orange-500 hover:bg-orange-600`)
+3. **Success states**: Use green (`bg-emerald-500` or `bg-green-500`)
+4. **Danger/Risk**: Use red (`bg-red-500 hover:bg-red-600`)
+5. **Status indicators**:
+   - High Risk: Red (#ef4444)
+   - Needs Observation: Yellow/Amber (#fbbf24)
+   - Under Control: Green (#10b981)
+
+### UI Components Standards
+1. **Headers**: White background (`bg-white`) with gray borders (`border-gray-200`)
+2. **Cards**: White background with subtle shadows (`shadow-md` or `shadow-lg`)
+3. **Buttons**: Rounded (`rounded` or `rounded-lg`) with appropriate color schemes
+4. **Inputs/Selects**: Border gray-300, focus ring with orange-500
+5. **Navigation**: Clean, minimal, with clear hierarchy
+
+## File Structure & Naming
+
+### Component Organization
+```
+src/
+├── components/          # Reusable UI components (PascalCase)
+├── pages/              # Route pages (PascalCase)
+├── lib/                # Utilities, stores, configurations
+├── data/               # Static JSON/GeoJSON data
+├── locales/            # i18n translation files (ka.json, en.json, ru.json)
+```
+
+### Naming Conventions
+- **React Components**: PascalCase (e.g., `OrchardDrawer.tsx`, `PortfolioFilters.tsx`)
+- **Utilities/Libs**: camelCase (e.g., `regionTranslations.ts`, `store.ts`)
+- **Pages**: PascalCase (e.g., `Dashboard.tsx`, `Landing.tsx`)
+- **Data files**: lowercase with hyphens (e.g., `farmers-v2.json`)
+
+## Dependencies & Libraries
+
+### Core Stack
+- **React 18** with TypeScript
+- **Vite** for build tooling
+- **Tailwind CSS** for styling (NO inline CSS or external stylesheets)
+- **React Router Dom** for routing
+- **i18next + react-i18next** for internationalization (Georgian, English, Russian)
+- **Zustand** for state management
+- **Leaflet + react-leaflet** for maps
+- **Recharts** for charts and data visualization
+
+### Installation Rules
+- Only install explicitly required packages
+- Always use `npm install` (not yarn or pnpm)
+- Keep `package.json` dependencies minimal and justified
+
+## Internationalization (i18n)
+
+### Language Support
+- **Primary**: Georgian (ka)
+- **Secondary**: English (en)
+- **Tertiary**: Russian (ru)
+
+### i18n Rules
+1. **All user-facing text MUST be translated** via `t('key')`
+2. **Never hardcode text** in components
+3. **Translation keys**: Use nested structure (`portfolio.farmersList.title`)
+4. **Language files**: Keep all three languages in sync (ka.json, en.json, ru.json)
+5. **Special cases**: Crop names always display in English in Farmers List
+6. **Translation helper functions**: Use `translateRegion`, `translateMunicipality`, `translateCrop` from `lib/regionTranslations.ts`
+
+### Language Switcher
+- Dropdown menu with flags and native language names
+- Position: Top-right navigation
+- z-index: `z-[1000]` to appear above maps and other content
+
+## Maps & GeoJSON
+
+### Map Guidelines
+1. **Library**: Use Leaflet via `react-leaflet`
+2. **Tiles**: OpenStreetMap (no API keys required)
+3. **Center**: Georgia (lat: 42.0, lng: 43.5)
+4. **Markers**: Color-coded dots for risk status
+5. **Polygons**: For orchards with property-based styling
+6. **No external geocoding services** - all data should be local
+
+### Risk Status Colors (Maps)
+- Red dots (`#ef4444`): High Risk
+- Yellow dots (`#fbbf24`): Needs Observation
+- Green dots (`#10b981`): Under Control
+
+## Data Handling
+
+### Static Data Sources
+- All data in `/src/data/` directory
+- JSON and GeoJSON formats only
+- Load via static imports: `import data from './data/file.json'`
+- **No remote API calls** for data fetching
+
+### Data Types
+```typescript
+// Farmer data structure
+interface Farmer {
+  id: string;
+  company: string;
+  crop: string;
+  area: number;
+  loanAmount: number;
+  region: string;
+  municipality: string;
+  riskStatus: 'high' | 'observation' | 'controlled';
+  score?: number;
+  checkupStatus?: 'checked' | 'not-checked' | 'in-progress';
+  lat: number;
+  lng: number;
+}
+```
+
+## Code Quality & Style
+
+### TypeScript
+- Use explicit types, avoid `any`
+- Functional components with hooks only
+- Props interfaces for all components
+- Proper type exports and imports
+
+### React Patterns
+1. **Functional components only** - No class components
+2. **Hooks**: useState, useEffect, useMemo, useCallback
+3. **Custom hooks**: When logic is reused across components
+4. **Component structure**:
+   ```typescript
+   import React from 'react';
+   import { useTranslation } from 'react-i18next';
+
+   interface ComponentProps {
+     // props definition
+   }
+
+   const Component: React.FC<ComponentProps> = ({ props }) => {
+     const { t, i18n } = useTranslation();
+     // component logic
+     return (/* JSX */);
+   };
+
+   export default Component;
+   ```
+
+### Tailwind CSS Best Practices
+1. **Use utility classes exclusively** - No custom CSS files
+2. **Responsive design**: Use `sm:`, `md:`, `lg:`, `xl:` prefixes
+3. **Consistent spacing**: Use Tailwind spacing scale (p-2, p-4, p-6, etc.)
+4. **Colors**: Always from the defined palette
+5. **Hover states**: Add `hover:` variants for interactive elements
+6. **Transitions**: Use `transition-colors`, `transition-all` for smooth effects
+
+## Performance
+
+### Optimization Rules
+1. **Lazy loading**: For large components (use `React.lazy()`)
+2. **useMemo**: For expensive calculations or filtered data
+3. **useCallback**: For event handlers passed as props
+4. **Keys**: Always use unique, stable keys in lists
+5. **Bundle size**: Keep dependencies minimal, avoid large libraries
+
+## Accessibility
+
+### A11y Guidelines
+1. **Color contrast**: Ensure WCAG AA compliance (4.5:1 minimum)
+2. **Focus states**: Visible focus indicators on interactive elements
+3. **Semantic HTML**: Use proper heading hierarchy (h1, h2, h3)
+4. **Alt text**: For all images and icons (where applicable)
+5. **Keyboard navigation**: All interactive elements should be keyboard accessible
+
+## PDF Generation & Export
+
+### Export Features
+- Use `@react-pdf/renderer` or `react-to-print`
+- Include: Orchard name, attributes, score breakdown, NDVI trend, recommendations
+- No remote images in PDFs - local assets only
+- Format: Professional with proper headers and sections
+
+## Testing & Validation
+
+### Before Committing
+1. **Build successfully**: `npm run dev` must work
+2. **No console errors**: Check browser console
+3. **Linter passes**: Fix all TypeScript/ESLint errors
+4. **All features functional**: Test main user flows
+5. **Translations complete**: Check all three language files
+
+## Git & Deployment
+
+### Commit Guidelines
+- Clear, descriptive commit messages
+- Small, focused commits (not massive changes)
+- Test before committing
+- **Never commit**:
+  - `node_modules/`
+  - `.env` files
+  - Build artifacts (already in .gitignore)
+
+### Deployment
+- Builds go to `/dist` directory
+- Static site deployment via AWS S3 + CloudFront
+- CDK stack in `/cdk` directory
+- Run build before deployment: `npm run build`
+
+## Navigation & Routing
+
+### Application Structure
+```
+/ (Landing)
+├── /portfolio-select (Bank portfolios: CB, SME, Board)
+├── /login (Authentication)
+└── /dashboard (Main app after auth)
+    ├── Map view (default)
+    ├── Filters sidebar
+    ├── Farmers list
+    └── Risk analysis
+```
+
+### Route Protection
+- Use `<ProtectedRoute>` wrapper for authenticated pages
+- Redirect to `/` if not authenticated
+- Store auth state in Zustand store
+
+## Common Pitfalls to Avoid
+
+### ❌ DON'T
+1. Mix color schemes or introduce off-brand colors
+2. Use inline styles or external CSS files
+3. Hardcode text instead of using i18n
+4. Create components without TypeScript types
+5. Use class components
+6. Add dependencies without justification
+7. Forget to update all three language files
+8. Use low z-index values (modals/dropdowns should be z-[999] or higher)
+9. Create monolithic components (keep them modular)
+10. Ignore responsive design (always consider mobile)
+
+### ✅ DO
+1. Follow the established color palette
+2. Use Tailwind utility classes exclusively
+3. Translate all user-facing text
+4. Type all components and props
+5. Use functional components with hooks
+6. Keep dependencies minimal
+7. Test in all three languages
+8. Use proper z-index layering (1000+ for above-map elements)
+9. Break down complex components
+10. Design mobile-first, then scale up
+
+## Component Creation Checklist
+
+When creating new components:
+- [ ] PascalCase filename (e.g., `MyComponent.tsx`)
+- [ ] TypeScript interface for props
+- [ ] Functional component with React.FC
+- [ ] Use `useTranslation()` hook for all text
+- [ ] Colors from defined palette only
+- [ ] Tailwind classes for all styling
+- [ ] Responsive design (sm:, md:, lg: breakpoints)
+- [ ] Proper TypeScript types (no `any`)
+- [ ] Clean, modular, reusable design
+- [ ] Add to all language files if new translation keys
+
+## Additional Notes
+
+### AgriTech Domain
+- This is a farm monitoring and risk assessment platform
+- Users: Banks, Insurance companies, Government agencies
+- Data: Farm locations, crops, loans, risk status, scores
+- Key features: Map visualization, filtering, risk analysis, reports
+
+### Business Logic
+- Risk categories: High Risk, Needs Observation, Under Control
+- Scores: 0-10 scale for farm quality assessment
+- Portfolios: CB (Corporate Banking), SME (Small/Medium Enterprises), Board (Executive)
+- Check-up system: On-site monitoring status tracking
+
+---
+
+**Last Updated**: 2025-10-24
+**Maintained By**: Development Team
+**Review**: Update this file when adding new features or changing conventions
+
