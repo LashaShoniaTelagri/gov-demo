@@ -1,0 +1,909 @@
+{
+  "app": { "title": "Мониторинг бенефициаров РДА" },
+  "nav": { "dashboard": "Панель управления", "targeting": "Таргетинг и Влияние", "audit": "Аудит и Флаги" },
+  "landing": {
+    "title": "Агро Портал",
+    "subtitle": "Выберите ваш портал для доступа к комплексным инструментам мониторинга и анализа в сельском хозяйстве",
+    "bank": "Банки",
+    "bankDesc": "",
+    "insurance": "Страховые Компании",
+    "insuranceDesc": "Отслеживайте застрахованные фермы, оценивайте риски и управляйте претензиями с данными в реальном времени",
+    "government": "Правительство",
+    "governmentDesc": "Отслеживайте бенефициаров РДА, контролируйте соблюдение требований и анализируйте эффективность программы",
+    "enter": "Войти в Портал",
+    "comingSoon": "Скоро",
+    "footer": "Разработано TelAgri © 2025"
+  },
+  "login": {
+    "bankTitle": "Вход в Банковский Портал",
+    "insuranceTitle": "Вход в Страховой Портал",
+    "governmentTitle": "Вход в Правительственный Портал",
+    "defaultTitle": "Вход в Портал",
+    "portfolio": "Портфель",
+    "email": "Электронная Почта",
+    "password": "Пароль",
+    "signIn": "Войти",
+    "signingIn": "Вход...",
+    "demoNotice": "Демо Режим",
+    "demoText": "Это демонстрационная среда. Используйте предзаполненные учетные данные для продолжения.",
+    "help": "Нужна помощь? Свяжитесь с support@telagri.com",
+    "footer": "Защищенная аутентификация от TelAgri",
+    "back": "Назад",
+    "logout": "Выйти"
+  },
+  "layers": { "title": "Слои", "index": { "title": "Индекс" }, "admin": "Административные Границы" },
+  "filters": { "title": "Фильтры", "region": "Регион", "municipality": "Муниципалитет", "crop": "Культура", "age": "Возраст сада (лет)", "areaHa": "Площадь (га)", "irrigation": "Орошение", "score": "Оценка", "choose": "Пожалуйста, выберите", "yes": "Да", "no": "Нет", "lab": { "title": "Лабораторный анализ" }, "indices": { "title": "Индексы" }, "diseases": { "title": "Болезни", "alternaria_alternata": "Alternaria alternata", "verticillium_dahliae": "Verticillium dahliae", "colletotrichum_acutatum": "Colletotrichum acutatum" }, "insects": { "title": "Насекомые", "myzus_persicae": "Myzus persicae", "cydia_pomonella": "Cydia pomonella", "tetranychus_urticae": "Tetranychus urticae" } },
+  "kpi": { "orchards": "Сады", "totalArea": "Общая площадь", "avgScore": "Средняя оценка" },
+  "charts": { "scoreBreakdown": "Разбивка оценки", "ndviTrend": "Тренд NDVI (12 мес)", "month": "Месяц", "ndvi": "NDVI" },
+  "orchard": { "id": "Сад №{{id}}", "area": "Площадь", "age": "Возраст", "irrigation": "Орошение", "score": "Оценка", "selectPrompt": "Выберите сад на карте для просмотра деталей" },
+  "score": { "irrigation": "Орошение", "soil": "Почва", "plantHealth": "Здоровье растений", "weeds": "Сорняки", "pest": "Вредители", "management": "Управление" },
+  "visits": { "title": "Мониторинговые визиты", "weeds": "Сорняки", "pest": "Вредители" },
+  "report": { "download": "Скачать Агрономический Отчет" },
+  "targeting": { "controls": "Симулировать вмешательства", "addIrrigation": "Добавить орошение", "improveFertilization": "Улучшить удобрение" },
+  "table": { "orchard": "Сад", "crop": "Культура", "area": "Площадь", "score": "Оценка", "after": "После", "flags": "Флаги" },
+  "unit": { "ha": "га" },
+  "lang": { "ka": "KA", "en": "EN", "ru": "RU" },
+  "panel": { "left": "Фильтры", "right": "Детали" },
+  "map": { "zoomHint": "Увеличьте карту, чтобы увидеть полигоны садов детально" },
+  "common": { "show": "Показать", "hide": "Скрыть", "yes": "Да", "no": "Нет" },
+  "scoreLabel": "Оценка",
+  "portfolio": {
+    "title": "Выберите Портфель",
+    "subtitle": "",
+    "back": "Назад к порталам",
+    "cbFull": "Корпоративный Банкинг",
+    "cbDesc": "",
+    "cbStats": "",
+    "smeFull": "Малые и Средние Предприятия",
+    "smeDesc": "",
+    "smeStats": "",
+    "boardFull": "Управленческая Панель",
+    "boardDesc": "",
+    "boardStats": "",
+    "statsLabel": "Обзор портфеля",
+    "note": "",
+    "noteText": "",
+    "highRisk": "Высокий Риск",
+    "needsObservation": "Требует Наблюдения",
+    "underControl": "Под Контролем",
+    "filters": {
+      "title": "ПОРТФЕЛЬ",
+      "country": "страна",
+      "crop": "культура",
+      "area": "площадь",
+      "loan": "кредит",
+      "region": "регион",
+      "municipality": "муниципалитет",
+      "checkUp": "ВЫЕЗДНОЙ МОНИТОРИНГ",
+      "reset": "Сбросить Фильтры",
+      "all": "Все",
+      "status": "Статус",
+      "statusHighRisk": "Высокий Риск",
+      "statusNeedsObservation": "Требует Наблюдения",
+      "statusUnderControl": "Под Контролем",
+      "checkupFilter": "Выездной Мониторинг",
+      "checkupStatusLabel": "Статус Проверки",
+      "checkupAll": "Все",
+      "checkupChecked": "✅ Проверено",
+      "checkupNotChecked": "❌ Не Проверено",
+      "checkupInProgress": "⌛ В Процессе",
+      "scoreRange": "Диапазон Оценки",
+      "scoreMin": "Мин",
+      "scoreMax": "Макс"
+    },
+    "farmersList": {
+      "title": "Список Фермеров",
+      "name": "Имя",
+      "company": "Компания",
+      "crop": "Культура",
+      "area": "Площадь",
+      "loanAmount": "Сумма Кредита",
+      "region": "Регион",
+      "municipality": "Муниципалитет",
+      "status": "Статус",
+      "score": "Оценка",
+      "checkup": "Выездной Мониторинг",
+      "requestService": "Запросить Услугу",
+      "confirmRequest": "Подтвердить Запрос Услуги",
+      "confirmMessage": "Вы уверены, что хотите запросить услугу проверки для этого фермера?",
+      "serviceCost": "Стоимость услуги: 1500 Евро + НДС",
+      "cancel": "Отмена",
+      "confirm": "Заказать",
+      "successMessage": "Запрос на услугу успешно отправлен!",
+      "governmentServiceTitle": "Запрос Услуги",
+      "instructions": "Инструкции",
+      "uploadData": "Загрузить Данные",
+      "generateF100": "Сгенерировать F-100",
+      "generatingF100": "Генерация F-100...",
+      "generatingF100Message": "Пожалуйста, подождите, документ F-100 генерируется",
+      "f100Document": "Документ F-100",
+      "fileSelected": "Выбранный файл",
+      "previous": "Предыдущая",
+      "next": "Следующая",
+      "lastUpdated": "Последнее Обновление"
+    },
+    "analytics": {
+      "total": "Всего",
+      "farmer": "фермер",
+      "farmers": "фермеров",
+      "title": "Аналитика портфеля",
+      "subtitle": "Срезы эффективности по культурам, регионам и размерам кредитов с агрономическими рисками.",
+      "topCrops": "Топ-3 культуры",
+      "bottomCrops": "Антилидеры культуры",
+      "topRegions": "Топ-3 региона",
+      "bottomRegions": "Антилидеры регионы",
+      "crops": "Культуры",
+      "regions": "Регионы",
+      "performanceByCropsRegions": "Эффективность портфеля по культурам и регионам",
+      "loanSizeAnalytics": "Аналитика размера кредита",
+      "loanSize": "Размер кредита",
+      "topLoans": "Лучшие размеры кредитов",
+      "bottomLoans": "Слабые размеры кредитов",
+      "combinedLoans": "Лучшие и слабые размеры кредитов",
+      "numberOfFarmers": "Количество фермеров",
+      "agrRiskOverview": "Обзор агрономических рисков",
+      "loanBands": "Диапазоны кредитов в текущем портфеле",
+      "noData": "Нет данных для выбранных фильтров.",
+      "scoreLegend": "Диапазоны оценок",
+      "bands": {
+        "excellent": "Отлично",
+        "good": "Хорошо",
+        "watch": "Наблюдать",
+        "risk": "Риск",
+        "critical": "Критично"
+      },
+      "riskFactors": {
+        "irrigation": "Орошение",
+        "pests": "Стресс от вредителей",
+        "water": "Застой воды",
+        "climate": "Климат"
+      },
+      "columns": {
+        "crops": "Культуры",
+        "regions": "Регионы",
+        "loans": "Диапазоны кредитов"
+      }
+    }
+  },
+  "map": {
+    "riskStatus": "Статус Риска",
+    "highRisk": "Высокий Риск",
+    "needsObservation": "Требует Наблюдения",
+    "underControl": "Под Контролем"
+  },
+  "farmerDetail": {
+    "needObservation": "Требует Наблюдения",
+    "underControl": "Под Контролем",
+    "weakPlants": "Увеличение слабых растений",
+    "driedPlants": "Рост количества засохших растений",
+    "missingPlants": "Увеличение отсутствующих растений",
+    "vegetationIndex": "Вегетационный индекс (указывает на вредителей, болезни или стресс)",
+    "waterUniformity": "Равномерность распределения воды",
+    "waterDeficiency": "Недостаток воды",
+    "excessiveWater": "Избыток воды",
+    "weedIssues": "Проблемы с сорняками",
+    "hailArea": "Зона поражения градом",
+    "highWindZone": "Зона сильного ветра",
+    "excessRainfall": "Зона избыточных осадков (наводнения и т.д.)",
+    "droughtArea": "Зона засухи",
+    "frostArea": "Зона морозов"
+  },
+  "executive": {
+    "dashboard": "Управленческая Панель",
+    "subtitle": "Стратегические инсайты и показатели эффективности",
+    "lastUpdated": "Последнее Обновление",
+    "keyMetrics": "Ключевые Показатели Эффективности",
+    "analytics": "Аналитика и Тренды",
+    "quickActions": "Быстрые Действия",
+    "generateReport": "Сгенерировать Отчет",
+    "viewDetails": "Просмотреть Детали",
+    "configure": "Настроить",
+    "exportData": "Экспорт Данных",
+    "executiveView": "Управленческий Просмотр",
+    "portfolioMonitoring": "Мониторинг Портфеля",
+    "allPortfolios": "Все",
+    "cbPortfolio": "КБ",
+    "smePortfolio": "МСП",
+    "portfolioSummary": "Сводка по Портфелю",
+    "portfolioOverview": "Обзор Портфеля",
+    "qualityRiskOverview": "Обзор Качества и Рисков",
+    "monitoring": "Мониторинг",
+    "totalUsers": "Всего Пользователей",
+    "crops": "Культуры",
+    "regions": "Регионы",
+    "totalArea": "Общая Площадь",
+    "totalLoanAmount": "Общая Сумма Кредитов",
+    "riskStatus": "Статус Риска",
+    "checkUpStatus": "Статус Проверки",
+    "scoresPerCrop": "Оценки Проверенных Фермеров по Культурам",
+    "selectCrop": "Выберите Культуру:",
+    "allCrops": "Все Культуры",
+    "farmers": "фермеров",
+    "checkedFarmers": "проверенных фермеров",
+    "averageScore": "Средняя Оценка",
+    "outOf10": "из 10",
+    "noCheckedFarmers": "Нет проверенных фермеров для этой культуры",
+    "checked": "Проверено",
+    "notChecked": "Не Проверено",
+    "inProgress": "В Процессе",
+    "totalPortfolio": "Общий Портфель",
+    "activeLoans": "Активные Кредиты",
+    "nplRatio": "Коэффициент NPL",
+    "avgLoanSize": "Сред. Размер Кредита",
+    "collectionRate": "Коэффициент Сбора",
+    "riskScore": "Оценка Риска",
+    "totalPremiums": "Общие Премии",
+    "activePolicies": "Активные Полисы",
+    "claimsRatio": "Коэффициент Претензий",
+    "avgClaimSize": "Сред. Размер Претензии",
+    "coverageArea": "Зона Покрытия",
+    "totalBeneficiaries": "Всего Бенефициаров",
+    "totalSubsidies": "Общие Субсидии",
+    "complianceRate": "Коэффициент Соблюдения",
+    "avgSubsidy": "Сред. Субсидия",
+    "monitoredArea": "Контролируемая Площадь",
+    "programEfficiency": "Эффективность Программы",
+    "portfolioDistribution": "Распределение Портфеля",
+    "monthlyPerformance": "Ежемесячная Эффективность (млн ₾)",
+    "riskDistribution": "Распределение Рисков",
+    "claimsByType": "Претензии по Типам",
+    "programByRegion": "Распределение Программы по Регионам",
+    "complianceByRegion": "Соблюдение по Регионам",
+    "monthlyTrends": "Ежемесячные Тренды",
+    "portfolio": "Портфель",
+    "disbursed": "Выдано",
+    "collected": "Собрано",
+    "premiums": "Премии",
+    "policies": "Полисы",
+    "claims": "Претензии",
+    "beneficiaries": "Бенефициары",
+    "subsidies": "Субсидии",
+    "subsidiesM": "Субсидии (млн ₾)",
+    "compliance": "Соблюдение",
+    "claimsCount": "Количество Претензий",
+    "amountM": "Сумма (млн ₾)"
+  },
+  "riskTrend": {
+    "title": "Анализ Тренда Рисков",
+    "subtitle": "Отслеживайте распределение рисков во времени и устанавливайте пользовательские оповещения",
+    "manageAlerts": "Управление Оповещениями",
+    "alertSettings": "Настройки Оповещений",
+    "alertDescription": "Установите пороговые значения в процентах для каждой категории риска. Вы будете уведомлены, когда любая категория превысит свой порог.",
+    "alertsTriggered": "⚠️ Оповещения Активированы",
+    "exceeds": "превышает порог",
+    "thresholdPercentage": "Порог Оповещения",
+    "percentage": "Процент (%)",
+    "saveSettings": "Сохранить Настройки",
+    "mapView": "Карта",
+    "chartView": "Аналитика"
+  },
+  "newLanding": {
+    "fieldVisit": "Альтернатива полевого визита",
+    "title": "Демонстрационная версия платформы аграрного мониторинга",
+    "placeOrder": "Оформить заказ",
+    "login": "Войти в систему",
+    "enter": "Продолжить"
+  },
+  "placeOrder": {
+    "title": "Оформить заказ",
+    "country": "Страна",
+    "regionFilter": "Регион (вид карты)",
+    "crops": "Выберите культуры",
+    "cropsPlaceholder": "Выберите культуры…",
+    "cropNames": { "apple": "Яблоко", "peach": "Персик" },
+    "selectAll": "Выбрать все",
+    "serviceType": "Тип услуги",
+    "service": {
+      "one-time": {
+        "title": "Разовый мониторинг",
+        "info": "Включает разовый мониторинг с одним отчётом."
+      },
+      "annual": {
+        "title": "Годовой мониторинг",
+        "info": "Включает 7 отчётов за год с анализом динамических изменений."
+      }
+    },
+    "selectedArea": "Выбранная площадь",
+    "cellsSelected": "Выбрано ячеек: {{count}}",
+    "areaHint": "Щёлкайте по ячейкам сетки, чтобы добавить. Повторный щелчок убирает ячейку.",
+    "totalPrice": "Итоговая цена",
+    "priceNote": "Примечание: рассчитано на основе выбранной площади, культур и типа услуги.",
+    "deliveryTime": "Сроки доставки",
+    "delivery": {
+      "annual1": "Первый отчёт будет доставлен в течение 30 дней после подтверждения заказа.",
+      "annual2": "Всего будет доставлено 7 отчётов за 12 месяцев, в соответствии с критическими фазами роста культур.",
+      "oneTime": "Результаты мониторинга будут доставлены в течение 30 дней после подтверждения заказа."
+    },
+    "submit": "Оформить заказ",
+    "submitting": "Отправка…",
+    "clearSelection": "Очистить",
+    "successTitle": "Заказ отправлен",
+    "successMessage": "Ваш заказ успешно отправлен.",
+    "successClose": "Готово",
+    "continueToLogin": "Войти в систему",
+    "loginModalTitle": "Портал",
+    "backHome": "На главную",
+    "tooltip": {
+      "id": "ID",
+      "area": "Площадь (га)",
+      "country": "Страна",
+      "region": "Регион",
+      "municipality": "Муниципалитет"
+    }
+  },
+  "monitoring": {
+    "title": "Мониторинг",
+    "country": "Страна",
+    "location": {
+      "avgScoreTitle": "Средняя оценка локации"
+    },
+    "uploadKmz": {
+      "title": "Загрузить KMZ-файл",
+      "body": "Здесь вы можете загрузить любой KMZ-файл.",
+      "button": "Загрузить"
+    },
+    "filters": {
+      "title": "Фильтры",
+      "region": "Регион",
+      "municipality": "Муниципалитет",
+      "crop": "Культура",
+      "score": "Оценка",
+      "scoreLow": "Низкая",
+      "scoreMid": "Средняя",
+      "scoreHigh": "Высокая",
+      "area": "Площадь (га)",
+      "min": "Мин",
+      "max": "Макс",
+      "all": "Все",
+      "reset": "Сбросить",
+      "resultsTitle": "Результаты фильтра",
+      "numberOfFarms": "Количество хозяйств"
+    },
+    "createFromFilter": "Создать портфель из фильтра",
+    "selection": {
+      "title": "Выбор",
+      "start": "Создать портфель",
+      "cancel": "Отмена",
+      "instructions": "Кликайте по полям на карте, чтобы переключить их в списке.",
+      "empty": "Пока нет выбранных полей.",
+      "hint": "Начните выбор на карте, чтобы собрать портфель.",
+      "save": "Сохранить портфель ({{count}})"
+    },
+    "portfolios": {
+      "title": "Мои портфели",
+      "empty": "Портфелей пока нет.",
+      "fields": "{{count}} полей",
+      "analytics": "Аналитика",
+      "kmz": "Скачать KMZ",
+      "attach": "Прикрепить KMZ",
+      "delete": "Удалить"
+    },
+    "tooltip": {
+      "id": "ID",
+      "crop": "Культура",
+      "score": "Оценка",
+      "area": "Площадь (га)",
+      "region": "Регион",
+      "municipality": "Муниципалитет"
+    },
+    "analysis": {
+      "title": "Анализ",
+      "scoreLow": "Низкая оценка (1.0–3.9). На поле обнаружено несколько признаков стресса. Рекомендуется выезд, проверка орошения и мониторинг вредителей.",
+      "scoreMid": "Средняя оценка (4.0–6.9). Есть отдельные индикаторы отставания. Рекомендуются точечные агромероприятия.",
+      "scoreHigh": "Высокая оценка (7.0–10.0). Поле работает в пределах ожиданий."
+    },
+    "empty": {
+      "title": "Анализ для этой точки отсутствует",
+      "prompt": "Выберите культуру для примерной оценки.",
+      "close": "Закрыть"
+    },
+    "evaluation": {
+      "sectionTitle": "Анализ оценки",
+      "cashFlowButton": "Финансовая модель сада",
+      "categoryBreakdown": "Категории",
+      "trend": "Тренд",
+      "overallScore": "Общая оценка",
+      "regionalAverage": "Средняя по региону",
+      "plantedArea": "Площадь насаждений (га)",
+      "cadastralCode": "Кадастровый код",
+      "cadastralArea": "Площадь",
+      "tabs": { "bankView": "Андеррайтинг", "monitoringTab": "Мониторинг" },
+      "trendLabels": { "m3": "3 мес. назад", "m2": "2 мес. назад", "m1": "Последний месяц" },
+      "categories": {
+        "climate": "Климат",
+        "irrigation": "Орошение",
+        "management": "Управление",
+        "pests": "Вредители"
+      },
+      "low": {
+        "title": "Low-Scoring Orchard",
+        "narrative": "This orchard is materially below the regional average. The main weaknesses are irrigation (3/10) and management (4/10). The pest component is also weak at 4/10, while climate is relatively neutral at 6/10, but not strong enough to offset the weaker drivers.",
+        "bankView": "This is a weak lead.\nIt should not be treated as a fast-approval case.\n\nWhat the Bank should focus on at underwriting stage:\n\n• Request a more detailed business plan, especially around operational stability\n• Verify why irrigation performance is weak and how this may affect output and income generation\n• Apply more conservative cash flow assumptions\n• Assess whether this is a temporary setback or a structural weakness",
+        "monitoringTab": "This case should be classified as Red / Attention Needed.\n\nWhat the Bank should monitor:\n\n• Whether the score continues to decline in the coming months\n• Whether irrigation and management improve or remain weak\n• Whether the gap versus the regional average narrows or widens\n\nWhat actions the Bank can take on an already disbursed loan:\n\n• Move the case into enhanced monitoring\n• Review the account more frequently\n• Request updated operational and performance information\n• If the score declines further, move it to a formal watchlist\n• Treat it as a priority review case for the relationship manager"
+      },
+      "mid": {
+        "title": "Mid-Scoring Orchard",
+        "narrative": "The orchard is close to the regional average, but one to two weaker components are limiting its overall score. Climate is strong at 8/10, and pests are moderate at 6/10, but management (5/10) and irrigation (6/10) keep the orchard from moving into a stronger segment.",
+        "bankView": "<p>This is a <strong>possible lead</strong>, but one that requires selective review.</p><p><strong>What the Bank should focus on at underwriting stage:</strong></p><ul><li>Pay particular attention to the <strong>management weakness</strong>, as it is the main limiting factor</li><li>Request a <strong>clearer explanation in the business plan</strong> of what will support stable performance in the coming seasons</li><li>Test whether the revenue assumptions are realistic</li><li>Approval should be considered only after <strong>additional review</strong></li></ul>",
+        "monitoringTab": "<p><strong>What the Bank should monitor:</strong></p><ul><li>Whether the management component improves or remains the main weak point</li><li>Whether the orchard moves closer to the regional average or remains below it</li><li>Whether the current positive trend holds or starts to reverse</li></ul><p><strong>What actions the Bank can take on an already disbursed loan:</strong></p><ul><li>Put the account on a regular review cycle</li><li>Monitor whether it starts moving into the low-score segment</li><li>If the trend turns negative over the next 1–2 months, move it into a higher-priority monitoring group</li><li>If both the score and weakest driver improve, keep it under standard monitoring</li></ul>"
+      },
+      "high": {
+        "title": "High-Scoring Orchard",
+        "narrative": "This orchard is clearly above the regional average. Its strongest areas are management (9/10), irrigation (8/10), and pests (8/10). Climate is also strong at 9/10. The high score is not driven by a single factor — the orchard is strong across the full profile.",
+        "bankView": "This is a good lead.\nIt is a stronger candidate both for new lending and for faster review.\n\nWhat the Bank should focus on at underwriting stage:\n\n• Confirm that the strong performance is stable and not one-off\n• Use the business plan discussion to assess growth potential, not only downside protection\n• This can be considered for faster review, given the high score and positive gap versus the regional average",
+        "monitoringTab": "What the Bank should monitor:\n\n• Whether the high score is sustained over time\n• Whether the weakest criterion starts to deteriorate\n• Whether the orchard remains above the regional average or begins to converge downward\n\nWhat actions the Bank can take on an already disbursed loan:\n\n• Keep the account under standard monitoring\n• Use it as an example of a healthy portfolio case\n• If the trend remains stable, it may qualify for low-touch monitoring\n• If one of the components starts weakening, move it early into Yellow / Review"
+      }
+    },
+    "analyticsBox": {
+      "title": "Аналитика",
+      "open": "Открыть аналитику"
+    },
+    "cashFlow": {
+      "back": "Назад к карте",
+      "title": "Финансовый прогноз сада",
+      "subtitle": "Яблоневый сад, 5 га — полная годовая модель денежных потоков.",
+      "regionalLoans": {
+        "title": "Потенциальные сезонные займы — по регионам",
+        "caption": "",
+        "columns": {
+          "activity": "Деятельность",
+          "region": "Регион",
+          "period": "Период",
+          "totalPortfolio": "Общий размер портфеля (USD)"
+        }
+      },
+      "paymentSchedule": {
+        "title": "График ежемесячных платежей",
+        "loanSizeLabel": "Размер займа",
+        "example": "",
+        "caption": "",
+        "columns": {
+          "month": "Месяц",
+          "loanPayment": "Платёж по займу",
+          "monthlyFreeCash": "Свободные средства за месяц",
+          "remainingCash": "Остаток средств"
+        },
+        "months": {
+          "january": "Январь",
+          "february": "Февраль",
+          "march": "Март",
+          "april": "Апрель",
+          "may": "Май",
+          "june": "Июнь",
+          "july": "Июль",
+          "august": "Август",
+          "september": "Сентябрь",
+          "october": "Октябрь",
+          "november": "Ноябрь",
+          "december": "Декабрь"
+        }
+      },
+      "seasonalLoans": {
+        "title": "Потенциальные займы для фермера",
+        "loanSizeTitle": "Размер займа (USD)",
+        "totalRevenue": "Общий доход",
+        "caption": "",
+        "columns": {
+          "activity": "Деятельность",
+          "period": "Период",
+          "loanSize": "Размер займа (USD)",
+          "annualRate": "Ставка %",
+          "term": "Срок (месяцев)",
+          "monthly": "Ежемесячный платёж",
+          "total": "Итоговый платёж"
+        },
+        "termMonths": "{{count}} мес.",
+        "activities": {
+          "soilPreparation": "Подготовка почвы",
+          "mineralFertilizer": "Минеральные удобрения",
+          "pruning": "Обрезка",
+          "sprayingPesticides": "Опрыскивание пестицидами",
+          "harvesting": "Сбор урожая"
+        },
+        "periods": {
+          "febMay": "Фев–Май",
+          "sepNov": "Сен–Ноя",
+          "decFeb": "Дек–Фев",
+          "febJul": "Фев–Июл",
+          "augSep": "Авг–Сен"
+        }
+      },
+      "revenueScenario": {
+        "title": "Анализ сценариев доходов",
+        "baseCase": "На основе Telagri Index",
+        "freeCash": "Свободные средства",
+        "yieldPerHa": "Урожайность/га",
+        "pricePerKg": "Цена/кг",
+        "revenuePerHa": "Доход/га",
+        "totalYield": "Общий урожай",
+        "totalRevenue": "Общий доход",
+        "costs": "Затраты",
+        "scenarios": {
+          "conservative": "Консервативный",
+          "realistic": "Консервативный",
+          "optimistic": "Оптимистичный"
+        }
+      },
+      "yieldAssumption": {
+        "title": "Допущение по урожайности",
+        "standardYield": "Стандартная урожайность",
+        "telagriYield": "Урожайность по баллу TelAgri",
+        "marketPrice": "Рыночная цена за кг",
+        "tPerHa": "т/га"
+      },
+      "realisticProfit": {
+        "title": "TELAGRI INDEX",
+        "profit": "Прибыль",
+        "farmScore": "Балл фермы",
+        "regionalIndex": "Региональный индекс",
+        "costVariation": "Индекс изменения затрат",
+        "priceVariation": "Индекс изменения цен"
+      },
+      "annualCashFlow": {
+        "title": "Годовая сводка",
+        "monthlyTableTitle": "Ежемесячный денежный поток — USD (5 га)",
+        "metric": "Показатель",
+        "total": "ИТОГО",
+        "rows": {
+          "directCosts": "Прямые затраты",
+          "mgmtCosts": "Управленческие затраты",
+          "potentialIncome": "Потенциальный доход",
+          "freeCash": "Свободные средства"
+        },
+        "tiles": {
+          "totalIncome": "Общий доход",
+          "totalIncomeSub": "Авг 50% · Сен 50%",
+          "directCosts": "Прямые затраты",
+          "directCostsSub": "5 га × годовой",
+          "mgmtCosts": "Упр. затраты",
+          "mgmtCostsSub": "$1,750 / мес.",
+          "freeCash": "Свободные средства",
+          "freeCashSub": "После всех затрат"
+        }
+      },
+      "directCosts": {
+        "title": "Прямые затраты",
+        "costItem": "Статья затрат",
+        "total": "ИТОГО",
+        "items": {
+          "mineralFertilizer": "Минеральные удобрения",
+          "organicFertilizer": "Органические удобрения",
+          "pruning": "Обрезка",
+          "wasteDisposal": "Утилизация отходов",
+          "soilCultivation": "Обработка почвы",
+          "irrigation": "Орошение",
+          "sprayingPesticides": "Опрыскивание пестицидами",
+          "harvest": "Сбор урожая",
+          "harvestTransportation": "Транспортировка урожая"
+        }
+      }
+    },
+    "analyticsPage": {
+      "title": "Аналитика",
+      "subtitle": "Обзор показателей портфеля и рынка.",
+      "back": "Назад к карте",
+      "tabs": {
+        "monitoring": "Мониторинг",
+        "leadGen": "Генерация лидов – Рынок"
+      },
+      "legend": { "portfolio": "Портфель", "market": "Рынок" },
+      "subsections": {
+        "scoreDistribution": "Аналитика по распределению оценок",
+        "criteria": "Аналитика по критериям",
+        "monthlyTrends": "Месячные тренды"
+      },
+      "kpis": {
+        "title": "KPI",
+        "metric": "Показатель",
+        "value": "Значение",
+        "totalAssessed": "Всего оценённых хозяйств на рынке",
+        "bankFarms": "Хозяйства банковского портфеля",
+        "share": "Доля портфеля от оценённого рынка",
+        "marketAvg": "Средняя оценка по рынку",
+        "portfolioAvg": "Средняя оценка по портфелю"
+      },
+      "riskTrends": {
+        "title": "Тренды риска и эффективности",
+        "caption": "Последний срез.",
+        "metrics": {
+          "highRisk": "Высокий риск %",
+          "improved": "Улучшение к пред. месяцу %",
+          "deteriorated": "Ухудшение к пред. месяцу %"
+        }
+      },
+      "scoreDist": {
+        "title": "Распределение оценок – последний месяц",
+        "band": "Категория",
+        "marketFarms": "Хозяйства рынка",
+        "portfolioFarms": "Хозяйства портфеля",
+        "bands": { "Low": "Низкая", "Medium": "Средняя", "High": "Высокая" }
+      },
+      "regionBenchmark": {
+        "title": "Региональный бенчмарк",
+        "caption": "Средняя оценка по регионам (шкала 1–10)."
+      },
+      "cropRegion": {
+        "title": "Культура × Регион (средняя оценка, шкала 1–10)",
+        "market": "Рынок",
+        "bank": "BANK",
+        "crops": {
+          "Vineyard": "Виноград",
+          "Hazelnut": "Фундук",
+          "Apple": "Яблоко",
+          "Peach": "Персик",
+          "Blueberry": "Черника"
+        }
+      },
+      "criteriaRegion": {
+        "title": "Критерий × Регион – HEATMAP",
+        "caption": "Средняя оценка по регионам по 4 слабейшим факторам — Рынок vs Банк."
+      },
+      "weakestDriver": {
+        "title": "Распределение слабейшего фактора",
+        "caption": "Количество и доля (%) хозяйств, у которых слабейший фактор — этот критерий.",
+        "count": "Количество",
+        "share": "Доля (%)",
+        "criteria": {
+          "Climate": "Климат",
+          "Irrigation": "Орошение",
+          "Management": "Управление",
+          "Pests": "Вредители"
+        }
+      },
+      "monthlyTrend": {
+        "title": "Месячный тренд – оценка",
+        "filters": {
+          "region": "Регион",
+          "municipality": "Муниципалитет",
+          "crop": "Культура",
+          "all": "Все"
+        },
+        "columns": {
+          "month": "Месяц",
+          "region": "Регион",
+          "municipality": "Муниципалитет",
+          "crop": "Культура",
+          "marketAvg": "Средняя оценка рынка",
+          "portfolioAvg": "Средняя оценка портфеля"
+        }
+      },
+      "monthlyHighRisk": {
+        "title": "Месячный тренд – высокий риск %",
+        "marketSeries": "Высокий риск % – Рынок",
+        "portfolioSeries": "Высокий риск % – Портфель банка"
+      },
+      "scoreMigration": {
+        "title": "Миграция категорий оценок",
+        "caption": "Хозяйства, перешедшие между категориями относительно предыдущего месяца.",
+        "from": "С прошлого месяца",
+        "market": "Рынок",
+        "portfolio": "Портфель",
+        "bands": { "Low": "Низкая", "Medium": "Средняя", "High": "Высокая" }
+      },
+      "leadGen": {
+        "intro": "Рыночные возможности с рейтингом и фильтрами для проработки.",
+        "leadOpportunity": {
+          "title": "Рейтинг лид-возможностей",
+          "caption": "Лучшие рыночные возможности по региону и культуре. Выберите муниципалитет, чтобы сузить список.",
+          "columns": {
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "avgScore": "Средняя оценка"
+          }
+        },
+        "byMigration": {
+          "title": "Генерация лидов – по миграции",
+          "caption": "Выберите переход категорий, чтобы увидеть пример хозяйства в этом сегменте.",
+          "filters": {
+            "category": "Категория",
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "minScore": "Мин. оценка",
+            "maxScore": "Макс. оценка"
+          },
+          "columns": {
+            "category": "Категория",
+            "farmCode": "Код хозяйства",
+            "gps": "GPS",
+            "areaHa": "Площадь (га)"
+          }
+        },
+        "byCriteria": {
+          "title": "Генерация лидов – по критериям",
+          "caption": "Выберите критерий и тип исполнителей (слабые / сильные). Остальные фильтры сужают список.",
+          "filters": {
+            "criterion": "Критерий",
+            "weakStrong": "Слабые / Сильные",
+            "weak": "Слабые",
+            "strong": "Сильные",
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "minScore": "Мин. оценка",
+            "maxScore": "Макс. оценка"
+          },
+          "columns": {
+            "criterion": "Критерий",
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "farmScore": "Оценка хозяйства",
+            "farmCode": "Код хозяйства",
+            "gps": "GPS",
+            "areaHa": "Площадь (га)"
+          }
+        },
+        "byScores": {
+          "title": "Генерация лидов – по оценкам",
+          "caption": "Топ хозяйств по оценке. Укажите мин./макс., чтобы сузить список.",
+          "filters": {
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "minScore": "Мин. оценка",
+            "maxScore": "Макс. оценка"
+          },
+          "columns": {
+            "region": "Регион",
+            "municipality": "Муниципалитет",
+            "crop": "Культура",
+            "farmScore": "Оценка хозяйства",
+            "farmCode": "Код хозяйства",
+            "gps": "GPS",
+            "areaHa": "Площадь (га)"
+          }
+        },
+        "actions": {
+          "downloadKmz": "Скачать KMZ",
+          "createPortfolio": "Создать портфель",
+          "savePortfolio": "Название портфеля",
+          "savePlaceholder": "напр. «Топ ташкентская черника»",
+          "save": "Сохранить",
+          "cancel": "Отмена",
+          "saved": "Портфель сохранён.",
+          "noMatches": "Нет хозяйств, соответствующих фильтрам."
+        }
+      },
+      "riskFlag": {
+        "title": "Риск-флаг – последний месяц",
+        "caption": "Хозяйства, отмеченные на мониторинг в этом месяце. Переключите Портфель / Рынок для сужения списка.",
+        "filter": {
+          "all": "Все",
+          "portfolio": "Портфель",
+          "market": "Рынок"
+        },
+        "columns": {
+          "orchardId": "ID хозяйства",
+          "source": "Портфель / Рынок",
+          "region": "Регион",
+          "municipality": "Муниципалитет",
+          "crop": "Культура",
+          "currentScore": "Текущая",
+          "prevScore": "Прев.",
+          "delta": "Delta",
+          "weakest": "Слабейший фактор",
+          "flag": "Риск-флаг"
+        },
+        "flags": { "Watch": "Наблюдение", "Critical": "Критично" }
+      },
+      "scoreMigrationFiltered": {
+        "title": "Миграция категорий оценок (фильтр)",
+        "caption": "Выберите переход категорий и источник, чтобы посмотреть выборку соответствующих хозяйств.",
+        "filters": {
+          "from": "С прошлого месяца",
+          "source": "Рынок / Портфель",
+          "region": "Регион",
+          "municipality": "Муниципалитет",
+          "crop": "Культура",
+          "any": "Любой"
+        },
+        "columns": {
+          "region": "Регион",
+          "municipality": "Муниципалитет",
+          "crop": "Культура",
+          "farms": "Хозяйства"
+        }
+      }
+    },
+    "save": {
+      "title": "Название портфеля",
+      "placeholder": "например, «Кахетинские яблоки»",
+      "count": "Будет сохранено полей: {{count}}.",
+      "confirm": "Сохранить",
+      "cancel": "Отмена"
+    },
+    "attach": {
+      "title": "Прикрепить KMZ",
+      "message": "Здесь вы можете загрузить KMZ-файл.",
+      "chooseFile": "Выберите файл",
+      "fileHint": "KMZ или KML",
+      "attach": "Прикрепить",
+      "attached": "«{{name}}» прикреплён.",
+      "close": "Закрыть"
+    },
+    "toast": {
+      "saved": "Портфель сохранён.",
+      "kmzUnavailable": "Скачивание KMZ недоступно в демо."
+    },
+    "sidebar": {
+      "collapse": "Свернуть панель",
+      "expand": "Развернуть панель"
+    }
+  },
+  "analytics": {
+    "back": "Вернуться к карте",
+    "filterHeading": "Аналитика полей",
+    "portfolioSub": "{{count}} полей · создан {{date}}",
+    "filterSub": "Срез по всем полям текущего вида.",
+    "kpi": {
+      "fields": "Поля",
+      "area": "Общая площадь",
+      "avgScore": "Средняя оценка",
+      "crops": "Культуры"
+    },
+    "scoreBreakdown": "Распределение оценок",
+    "byCrop": "Поля по культурам",
+    "byRegion": "Поля по регионам",
+    "summary": {
+      "title": "Сводка портфеля",
+      "body": "По выбранным полям распределение оценок и культур в пределах ожидаемого для сезона. Кластеры с низкой оценкой требуют выезда в ближайшие 30 дней.\n\nСочетание культура/регион указывает на стабильный риск-профиль; рекомендуем еженедельный мониторинг."
+    },
+    "placeholderNote": "Аналитический текст — заглушка и будет заменён финальным содержанием."
+  },
+  "grid": {
+    "title": "Калькулятор сетки",
+    "country": "Страна",
+    "crop": "Культура",
+    "region": "Регион",
+    "area": "Площадь",
+    "totalArea": "Общая площадь",
+    "cell": "Ячейка",
+    "cellsSelected": "Выбрано ячеек",
+    "clearAll": "Очистить",
+    "result": "Результат",
+    "computedValue": "Расчётное значение",
+    "selectPrompt": "Щёлкайте по ячейкам сетки, чтобы добавить. Повторный щелчок убирает ячейку.",
+    "placeholderNote": "Тестовая формула — реальные значения уточняются.",
+    "comingSoon": "скоро",
+    "countryUnavailable": "Данные сетки для этой страны пока недоступны.",
+    "countries": {
+      "georgia": "Грузия",
+      "uzbekistan": "Узбекистан"
+    }
+  },
+  "fieldVisit": {
+    "loginTitle": "Войти в аккаунт",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "signIn": "Войти",
+    "signingIn": "Вход...",
+    "loginError": "Неверное имя пользователя или пароль",
+    "searchHeading": "Введите кадастровый код",
+    "cadastralCode": "Кадастровый код",
+    "search": "Поиск",
+    "notFound": "Участок с этим кадастровым кодом не найден",
+    "region": "Регион",
+    "municipality": "Муниципалитет",
+    "village": "Село",
+    "cadastralArea": "Кадастровая площадь (га)",
+    "crop": "Культура",
+    "orchardAge": "Возраст сада (лет)",
+    "plantedArea": "Засаженная площадь (га)",
+    "healthyArea": "Общая площадь здоровых растений (га)",
+    "lowProductivityArea": "Площадь низкой продуктивности (га)",
+    "orchardCondition": "Состояние сада",
+    "condition": {
+      "good": "Хорошее",
+      "medium": "Среднее",
+      "poor": "Плохое"
+    },
+    "evaluationDate": "Дата оценки сада",
+    "downloadFile": "Скачать файл"
+  }
+}
+
+
+
+

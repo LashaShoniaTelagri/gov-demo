@@ -64,22 +64,35 @@ const RiskTrendChart: React.FC<RiskTrendChartProps> = ({ data, filteredFarmers =
     
     // Get current date
     const currentDate = new Date();
-    const months = [];
+    const dataPoints = [];
     
-    // Generate last 6 months
-    for (let i = 5; i >= 0; i--) {
-      const date = new Date(currentDate);
-      date.setMonth(date.getMonth() - i);
-      months.push(date.toLocaleString('en-US', { month: 'short' }));
+    // Generate data points: 6 months with 3 points per month (1st, 11th, 21st)
+    // Total: 18 data points over 6 months
+    for (let monthOffset = 5; monthOffset >= 0; monthOffset--) {
+      const baseDate = new Date(currentDate);
+      baseDate.setMonth(baseDate.getMonth() - monthOffset);
+      
+      // Three points per month: 1st, 11th, 21st day
+      [1, 11, 21].forEach(day => {
+        const pointDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), day);
+        
+        // Format as "Oct 1", "Oct 11", "Oct 21"
+        const formattedDate = pointDate.toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        });
+        
+        dataPoints.push(formattedDate);
+      });
     }
     
-    // Calculate EXACT percentages from filtered data (current/latest month)
+    // Calculate EXACT percentages from filtered data (current/latest period)
     const total = filteredFarmers.length;
     
     // If no farmers, show zeros
     if (total === 0) {
-      return months.map((month) => ({
-        month,
+      return dataPoints.map((date) => ({
+        month: date,
         high: 0,
         observation: 0,
         controlled: 0,
@@ -95,25 +108,26 @@ const RiskTrendChart: React.FC<RiskTrendChartProps> = ({ data, filteredFarmers =
     const controlledPct = (controlledCount / total) * 100;
     
     // Generate historical trend data
-    // Last month (index 5) will have EXACT current data
-    // Previous months will have slight variations to show trend
-    return months.map((month, index) => {
-      // Last month = exact current data (no variation)
-      if (index === 5) {
+    // Last point (index 17) will have EXACT current data
+    // Previous points will have slight variations to show trend
+    const totalPoints = dataPoints.length;
+    return dataPoints.map((date, index) => {
+      // Last point = exact current data (no variation)
+      if (index === totalPoints - 1) {
         return {
-          month,
+          month: date,
           high: parseFloat(highPct.toFixed(1)),
           observation: parseFloat(obsPct.toFixed(1)),
           controlled: parseFloat(controlledPct.toFixed(1)),
         };
       }
       
-      // Historical months: simulate trend leading to current values
-      const progress = index / 5; // 0 to 1
+      // Historical points: simulate trend leading to current values
+      const progress = index / (totalPoints - 1); // 0 to 1
       const historicalVariation = (0.8 - progress) * 8; // Larger variation in past, converges to current
       
       return {
-        month,
+        month: date,
         high: Math.max(0, Math.min(100, parseFloat((highPct - historicalVariation + (Math.random() - 0.5) * 4).toFixed(1)))),
         observation: Math.max(0, Math.min(100, parseFloat((obsPct + historicalVariation * 0.3 + (Math.random() - 0.5) * 4).toFixed(1)))),
         controlled: Math.max(0, Math.min(100, parseFloat((controlledPct - historicalVariation * 0.3 + (Math.random() - 0.5) * 4).toFixed(1)))),

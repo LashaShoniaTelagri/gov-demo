@@ -50,5 +50,5 @@ cdk/.cdk.staging/
 # Local tooling / raw GIS exports
 code_memory.db*
 Credo_*_WebMap/
-cases/
+/cases/
 activate-python.sh

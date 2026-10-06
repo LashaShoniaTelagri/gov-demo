@@ -5,10 +5,19 @@ import { useTranslation } from 'react-i18next';
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const [langDropdownOpen, setLangDropdownOpen] = React.useState(false);
 
-  const toggleLang = () => {
-    const next = i18n.language === 'ka' ? 'en' : 'ka';
-    i18n.changeLanguage(next);
+  const languages = [
+    { code: 'ka', label: 'ქართული', flag: '🇬🇪' },
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  ];
+
+  const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  const handleLangChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    setLangDropdownOpen(false);
   };
 
   const portals = [
@@ -48,6 +57,11 @@ const Landing: React.FC = () => {
   ];
 
   const handlePortalClick = (portalId: string) => {
+    // Insurance is disabled - coming soon
+    if (portalId === 'insurance') {
+      return;
+    }
+    
     if (portalId === 'bank') {
       navigate('/portfolio-select');
     } else {
@@ -60,22 +74,45 @@ const Landing: React.FC = () => {
       <div className="max-w-6xl w-full">
         {/* Language Switcher */}
         <div className="flex justify-end mb-6 animate-fade-in">
-          <button 
-            onClick={toggleLang} 
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-blue-500 hover:text-blue-600 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
-          >
-            {i18n.language === 'ka' ? (
+          <div className="relative z-[1000]">
+            <button 
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-blue-500 hover:text-blue-600 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+            >
+              <span className="text-xl">{currentLang.flag}</span>
+              <span>{currentLang.label}</span>
+              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {langDropdownOpen && (
               <>
-                <span className="text-xl">🇬🇧</span>
-                <span>{t('lang.en')}</span>
-              </>
-            ) : (
-              <>
-                <span className="text-xl">🇬🇪</span>
-                <span>{t('lang.ka')}</span>
+                <div
+                  className="fixed inset-0 z-[999]"
+                  onClick={() => setLangDropdownOpen(false)}
+                />
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-[1000]">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLangChange(lang.code)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
+                        i18n.language === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                      }`}
+                    >
+                      <span className="text-xl">{lang.flag}</span>
+                      <span className="font-medium">{lang.label}</span>
+                      {i18n.language === lang.code && (
+                        <svg className="w-5 h-5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
               </>
             )}
-          </button>
+          </div>
         </div>
 
         {/* Header */}
@@ -87,37 +124,59 @@ const Landing: React.FC = () => {
 
         {/* Portal Cards */}
         <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-          {portals.map((portal, index) => (
-            <button
-              key={portal.id}
-              onClick={() => handlePortalClick(portal.id)}
-              className={`group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-8 text-center animate-slide-up`}
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              {/* Gradient Background on Hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${portal.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}></div>
-              
-              {/* Icon */}
-              <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br ${portal.gradient} text-white mb-6 transform group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                {portal.icon}
-              </div>
-
-              {/* Title */}
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
-                {portal.title}
-              </h2>
-
-              {/* Arrow Icon */}
-              <div className="mt-6 flex items-center justify-center">
-                <div className={`flex items-center gap-2 text-sm font-semibold bg-gradient-to-r ${portal.gradient} bg-clip-text text-transparent group-hover:gap-3 transition-all duration-300`}>
-                  <span>{t('landing.enter')}</span>
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+          {portals.map((portal, index) => {
+            const isDisabled = portal.id === 'insurance';
+            
+            return (
+              <button
+                key={portal.id}
+                onClick={() => handlePortalClick(portal.id)}
+                disabled={isDisabled}
+                className={`group relative bg-white rounded-2xl shadow-xl transition-all duration-300 p-8 text-center animate-slide-up ${
+                  isDisabled 
+                    ? 'opacity-60 cursor-not-allowed' 
+                    : 'hover:shadow-2xl transform hover:-translate-y-2'
+                }`}
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                {/* Coming Soon Badge */}
+                {isDisabled && (
+                  <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                    {t('landing.comingSoon')}
+                  </div>
+                )}
+                
+                {/* Gradient Background on Hover */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${portal.gradient} ${isDisabled ? 'opacity-0' : 'opacity-0 group-hover:opacity-10'} rounded-2xl transition-opacity duration-300`}></div>
+                
+                {/* Icon */}
+                <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br ${portal.gradient} text-white mb-6 ${isDisabled ? '' : 'transform group-hover:scale-110'} transition-transform duration-300 shadow-lg`}>
+                  {portal.icon}
                 </div>
-              </div>
-            </button>
-          ))}
+
+                {/* Title */}
+                <h2 className={`text-2xl font-bold text-gray-800 mb-6 transition-all duration-300 ${
+                  isDisabled 
+                    ? '' 
+                    : 'group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600'
+                }`}>
+                  {portal.title}
+                </h2>
+
+                {/* Arrow Icon - Only show for enabled portals */}
+                {!isDisabled && (
+                  <div className="mt-6 flex items-center justify-center">
+                    <div className={`flex items-center gap-2 text-sm font-semibold bg-gradient-to-r ${portal.gradient} bg-clip-text text-transparent group-hover:gap-3 transition-all duration-300`}>
+                      <span>{t('landing.enter')}</span>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Footer */}

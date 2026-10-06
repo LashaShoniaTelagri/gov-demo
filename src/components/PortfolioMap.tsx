@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useTranslation } from 'react-i18next';
+import { translateCrop, getCompanyName } from '../lib/regionTranslations';
 
 export interface Farmer {
   id: string;
@@ -9,6 +10,11 @@ export interface Farmer {
   surname: string;
   nameEn: string;
   surnameEn: string;
+  nameRu: string;
+  surnameRu: string;
+  company: string;
+  companyEn?: string;
+  companyRu?: string;
   portfolio: string;
   riskStatus: 'high' | 'observation' | 'controlled';
   crop: string;
@@ -20,6 +26,8 @@ export interface Farmer {
   lng: number;
   checkupStatus?: 'checked' | 'not_checked' | 'in_progress';
   score?: number;
+  country?: string;
+  currency?: string;
 }
 
 interface PortfolioMapProps {
@@ -42,9 +50,10 @@ const PortfolioMap: React.FC<PortfolioMapProps> = ({
   // Initialize map
   useEffect(() => {
     if (!mapRef.current) {
+      // Default to Uzbekistan center
       const map = L.map(mapId, {
-        center: [42.0, 43.5], // Center of Georgia
-        zoom: 7,
+        center: [41.0, 64.5], // Center of Uzbekistan
+        zoom: 6,
         zoomControl: true,
       });
 
@@ -108,16 +117,21 @@ const PortfolioMap: React.FC<PortfolioMapProps> = ({
         className: isHighRisk ? 'high-risk-marker' : '',
       });
 
-      // Add tooltip
-      const farmerName = i18n.language === 'ka' 
-        ? `${farmer.name} ${farmer.surname}`
-        : `${farmer.nameEn} ${farmer.surnameEn}`;
+      // Add tooltip with translated company name and crop
+      const companyName = getCompanyName(farmer, i18n.language);
+      const cropName = translateCrop(farmer.crop, i18n.language);
+      
+      // Dynamic currency symbol
+      const currencySymbol = farmer.currency === 'UZS' ? 'UZS' : '₾';
+      const loanDisplay = farmer.currency === 'UZS' 
+        ? `${(farmer.loanAmount / 1000).toFixed(0)}K ${currencySymbol}`
+        : `${currencySymbol}${(farmer.loanAmount / 1000).toFixed(0)}K`;
       
       marker.bindTooltip(
         `<div class="text-sm">
-          <strong>${farmerName}</strong><br/>
-          ${farmer.crop} • ${farmer.area.toFixed(1)} ha<br/>
-          ₾${(farmer.loanAmount / 1000).toFixed(0)}K
+          <strong>${companyName}</strong><br/>
+          ${cropName} • ${farmer.area.toFixed(1)} ha<br/>
+          ${loanDisplay}
         </div>`,
         {
           direction: 'top',
@@ -150,6 +164,15 @@ const PortfolioMap: React.FC<PortfolioMapProps> = ({
       marker.addTo(mapRef.current!);
       markersRef.current[farmer.id] = marker;
     });
+
+    // Auto-fit map bounds to show all farmers
+    if (farmers.length > 0 && mapRef.current) {
+      const bounds = L.latLngBounds(farmers.map(f => [f.lat, f.lng]));
+      mapRef.current.fitBounds(bounds, { 
+        padding: [50, 50],
+        maxZoom: 10
+      });
+    }
   }, [farmers, selectedFarmerId, onFarmerSelect, i18n.language]);
 
   // Pan to selected farmer
