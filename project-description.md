@@ -1,4 +1,4 @@
-# Georgia Agricultural Monitoring Demo – Project Specification
+# Agricultural Monitoring Platform - Demo – Project Specification
 
 ## Overview
 

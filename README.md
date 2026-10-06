@@ -1,4 +1,4 @@
-## Georgia Agricultural Monitoring Demo
+## Agricultural Monitoring Platform - Demo
 
 Draft notes
 
