@@ -5,16 +5,20 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc -p .",
-    "synth": "cdk synth",
-    "deploy": "cdk deploy TelagriStaticSite",
-    "destroy": "cdk destroy TelagriStaticSite"
+    "bundle:lambda": "cp ../public/grids/grid-georgia.geojson lambda/order-handler/grid-georgia.geojson && npm --prefix lambda/order-handler install --omit=dev --no-package-lock",
+    "synth": "npm run bundle:lambda && cdk synth",
+    "deploy:site": "cdk deploy gov-prod-demo",
+    "deploy:api": "npm run bundle:lambda && cdk deploy telagri-api",
+    "deploy": "npm run deploy:site && npm run deploy:api",
+    "destroy": "cdk destroy gov-prod-demo telagri-api"
   },
   "devDependencies": {
     "aws-cdk-lib": "^2.151.0",
     "constructs": "^10.3.0",
     "typescript": "^5.5.4",
     "source-map-support": "^0.5.21",
-    "aws-cdk": "^2.1030.0"
+    "aws-cdk": "^2.1030.0",
+    "@types/node": "^20.14.0"
   },
   "dependencies": {}
 }
