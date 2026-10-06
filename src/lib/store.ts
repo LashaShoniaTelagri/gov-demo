@@ -58,15 +58,24 @@ export type AuthState = {
   email?: string;
 };
 
+// Separate demo gate for the Field Visit Alternative module. Kept apart from
+// `auth` so the two demo surfaces never collide. caseId identifies which client
+// (e.g. 'credo') the visitor logged into.
+export type DemoAuthState = {
+  caseId?: string;
+};
+
 type AppState = {
   filters: FiltersState;
   toggles: LayerTogglesState;
   ui: UIState;
   auth: AuthState;
+  demoAuth: DemoAuthState;
   setFilters: (partial: Partial<FiltersState>) => void;
   setToggles: (partial: Partial<LayerTogglesState>) => void;
   setUI: (partial: Partial<UIState>) => void;
   setAuth: (partial: Partial<AuthState>) => void;
+  setDemoAuth: (partial: Partial<DemoAuthState>) => void;
   logout: () => void;
 };
 
@@ -89,24 +98,29 @@ export const useAppStore = create<AppState>()(
       },
       ui: { showLeftPanel: true, showRightPanel: false },
       auth: { isAuthenticated: false },
+      demoAuth: {},
       setFilters: (partial) => set((state) => ({ filters: { ...state.filters, ...partial } })),
       setToggles: (partial) => set((state) => ({ toggles: { ...state.toggles, ...partial } })),
       setUI: (partial) => set((state) => ({ ui: { ...state.ui, ...partial } })),
-      setAuth: (partial) => set((state) => ({ 
-        auth: { ...state.auth, ...partial } 
+      setAuth: (partial) => set((state) => ({
+        auth: { ...state.auth, ...partial }
+      })),
+      setDemoAuth: (partial) => set((state) => ({
+        demoAuth: { ...state.demoAuth, ...partial }
       })),
       logout: () => {
         // Clear alert settings from localStorage
         localStorage.removeItem('riskTrendAlerts');
         // Reset auth state
-        set({ auth: { isAuthenticated: false } });
+        set({ auth: { isAuthenticated: false }, demoAuth: {} });
       },
     }),
     {
       name: 'telagri-app-storage',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         auth: state.auth,
+        demoAuth: state.demoAuth,
         // Only persist auth state, not filters/toggles/ui
       }),
     }

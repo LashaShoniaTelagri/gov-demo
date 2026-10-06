@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Farmer } from './PortfolioMap';
-import { translateRegion, translateMunicipality, translateCrop } from '../lib/regionTranslations';
+import { translateRegion, translateMunicipality, translateCrop, getCompanyName } from '../lib/regionTranslations';
+import { useAppStore } from '../lib/store';
 
 interface FarmersListProps {
   farmers: Farmer[];
@@ -19,13 +20,33 @@ const FarmersList: React.FC<FarmersListProps> = ({
   onToggle,
 }) => {
   const { t, i18n } = useTranslation();
+  const auth = useAppStore((state) => state.auth);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<keyof Farmer>('company');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const itemsPerPage = 10;
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showGovernmentModal, setShowGovernmentModal] = useState(false);
+  const [showF100Modal, setShowF100Modal] = useState(false);
+  const [isGeneratingF100, setIsGeneratingF100] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectedFarmerForRequest, setSelectedFarmerForRequest] = useState<Farmer | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Generate simulated last updated date (current date - random 0-5 days)
+  const getLastUpdated = () => {
+    const now = new Date();
+    const randomDays = Math.floor(Math.random() * 6); // 0-5 days
+    const lastUpdated = new Date(now.getTime() - randomDays * 24 * 60 * 60 * 1000);
+    
+    const dateString = lastUpdated.toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : 'en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+    
+    return dateString;
+  };
 
   // Export to Excel (CSV)
   const exportToExcel = () => {
@@ -37,21 +58,26 @@ const FarmersList: React.FC<FarmersListProps> = ({
       t('portfolio.farmersList.region'),
       t('portfolio.farmersList.municipality'),
       t('portfolio.farmersList.status'),
-      t('portfolio.farmersList.score'),
     ];
     
-    const rows = sortedFarmers.map((farmer) => [
-      farmer.company,
-      translateCrop(farmer.crop, i18n.language),
-      `${farmer.area.toFixed(1)} ha`,
-      `₾${farmer.loanAmount.toLocaleString()}`,
-      translateRegion(farmer.region, i18n.language),
-      translateMunicipality(farmer.municipality, i18n.language),
-      farmer.riskStatus === 'high' ? t('portfolio.highRisk') : 
-        farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : 
-        t('portfolio.underControl'),
-      farmer.checkupStatus === 'checked' && farmer.score ? farmer.score.toFixed(1) : '-',
-    ]);
+    const rows = sortedFarmers.map((farmer) => {
+      const currencySymbol = farmer.currency === 'UZS' ? 'UZS' : '₾';
+      const loanDisplay = farmer.currency === 'UZS' 
+        ? `${farmer.loanAmount.toLocaleString()} ${currencySymbol}`
+        : `${currencySymbol}${farmer.loanAmount.toLocaleString()}`;
+      
+      return [
+        farmer.company,
+        translateCrop(farmer.crop, 'en'), // Always use English for crops in export
+        `${farmer.area.toFixed(1)} ha`,
+        loanDisplay,
+        translateRegion(farmer.region, i18n.language),
+        translateMunicipality(farmer.municipality, i18n.language),
+        farmer.riskStatus === 'high' ? t('portfolio.highRisk') : 
+          farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : 
+          t('portfolio.underControl'),
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
@@ -102,24 +128,28 @@ const FarmersList: React.FC<FarmersListProps> = ({
               <th>${t('portfolio.farmersList.region')}</th>
               <th>${t('portfolio.farmersList.municipality')}</th>
               <th>${t('portfolio.farmersList.status')}</th>
-              <th>${t('portfolio.farmersList.score')}</th>
             </tr>
           </thead>
           <tbody>
             ${sortedFarmers
               .map(
-                (farmer) => `
+                (farmer) => {
+                  const currencySymbol = farmer.currency === 'UZS' ? 'UZS' : '₾';
+                  const loanDisplay = farmer.currency === 'UZS' 
+                    ? `${farmer.loanAmount.toLocaleString()} ${currencySymbol}`
+                    : `${currencySymbol}${farmer.loanAmount.toLocaleString()}`;
+                  return `
               <tr>
                 <td>${farmer.company}</td>
-                <td>${translateCrop(farmer.crop, i18n.language)}</td>
+                <td>${translateCrop(farmer.crop, 'en')}</td>
                 <td>${farmer.area.toFixed(1)} ha</td>
-                <td>₾${farmer.loanAmount.toLocaleString()}</td>
+                <td>${loanDisplay}</td>
                 <td>${translateRegion(farmer.region, i18n.language)}</td>
                 <td>${translateMunicipality(farmer.municipality, i18n.language)}</td>
                 <td>${farmer.riskStatus === 'high' ? t('portfolio.highRisk') : farmer.riskStatus === 'observation' ? t('portfolio.needsObservation') : t('portfolio.underControl')}</td>
-                <td>${farmer.checkupStatus === 'checked' && farmer.score ? farmer.score.toFixed(1) : '-'}</td>
               </tr>
-            `
+            `;
+                }
               )
               .join('')}
           </tbody>
@@ -144,8 +174,16 @@ const FarmersList: React.FC<FarmersListProps> = ({
 
     // Handle name sorting based on language
     if (sortField === 'name') {
-      aValue = i18n.language === 'ka' ? a.name : a.nameEn;
-      bValue = i18n.language === 'ka' ? b.name : b.nameEn;
+      if (i18n.language === 'ka') {
+        aValue = `${a.name} ${a.surname}`;
+        bValue = `${b.name} ${b.surname}`;
+      } else if (i18n.language === 'ru') {
+        aValue = `${a.nameRu || a.nameEn} ${a.surnameRu || a.surnameEn}`;
+        bValue = `${b.nameRu || b.nameEn} ${b.surnameRu || b.surnameEn}`;
+      } else {
+        aValue = `${a.nameEn} ${a.surnameEn}`;
+        bValue = `${b.nameEn} ${b.surnameEn}`;
+      }
     }
 
     // Handle score sorting (undefined values go to the end)
@@ -182,26 +220,40 @@ const FarmersList: React.FC<FarmersListProps> = ({
     }
   };
 
-  const getRiskStatusBadge = (status: string) => {
+  const getRiskStatusButton = (status: string, farmerId: string) => {
     const badges = {
       high: {
         color: 'bg-red-500',
+        hoverColor: 'hover:bg-red-600',
         label: t('portfolio.highRisk'),
       },
       observation: {
         color: 'bg-yellow-400',
+        hoverColor: 'hover:bg-yellow-500',
         label: t('portfolio.needsObservation'),
       },
       controlled: {
         color: 'bg-green-500',
+        hoverColor: 'hover:bg-green-600',
         label: t('portfolio.underControl'),
       },
     };
 
     const badge = badges[status as keyof typeof badges];
     return (
-      <div className="flex items-center justify-center" title={badge.label}>
-        <span className={`w-6 h-3 ${badge.color}`}></span>
+      <div className="flex items-center justify-center">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onFarmerSelect(farmerId);
+          }}
+          className={`w-12 h-6 ${badge.color} ${badge.hoverColor} rounded transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer relative group`}
+          title={`${badge.label} - Click for details`}
+          aria-label={`View ${badge.label} details`}
+        >
+          {/* Pulse animation hint */}
+          <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 ring-2 ring-white ring-opacity-50"></span>
+        </button>
       </div>
     );
   };
@@ -228,49 +280,59 @@ const FarmersList: React.FC<FarmersListProps> = ({
   return (
     <div className="bg-white border-t border-gray-200 shadow-lg">
       {/* Header */}
-      <div className="w-full px-6 py-4 flex items-center justify-between bg-white border-b border-gray-200 sticky top-0 z-10">
-        <button
-          onClick={onToggle}
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-        >
-          <h3 className="text-lg font-bold text-gray-800">{t('portfolio.farmersList.title')}</h3>
-          <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold">
-            {farmers.length}
-          </span>
-          <svg
-            className={`w-6 h-6 text-gray-600 transition-transform duration-200`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div className="w-full px-6 py-4 bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={onToggle}
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            {isOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-            )}
-          </svg>
-        </button>
+            <h3 className="text-lg font-bold text-gray-800">{t('portfolio.farmersList.title')}</h3>
+            <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold">
+              {farmers.length}
+            </span>
+            <svg
+              className={`w-6 h-6 text-gray-600 transition-transform duration-200`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              )}
+            </svg>
+          </button>
+          
+          {/* Export Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={exportToExcel}
+              className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors flex items-center gap-1.5"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Excel
+            </button>
+            <button
+              onClick={exportToPDF}
+              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors flex items-center gap-1.5"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              PDF
+            </button>
+          </div>
+        </div>
         
-        {/* Export Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={exportToExcel}
-            className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors flex items-center gap-1.5"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Excel
-          </button>
-          <button
-            onClick={exportToPDF}
-            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors flex items-center gap-1.5"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-            PDF
-          </button>
+        {/* Last Updated Timestamp */}
+        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{t('portfolio.farmersList.lastUpdated')}: {getLastUpdated()}</span>
         </div>
       </div>
 
@@ -387,15 +449,6 @@ const FarmersList: React.FC<FarmersListProps> = ({
                       <SortIcon field="riskStatus" />
                     </div>
                   </th>
-                  <th
-                    onClick={() => handleSort('score')}
-                    className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      {t('portfolio.farmersList.score')}
-                      <SortIcon field="score" />
-                    </div>
-                  </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     {t('portfolio.farmersList.checkup')}
                   </th>
@@ -405,39 +458,37 @@ const FarmersList: React.FC<FarmersListProps> = ({
                 {paginatedFarmers.map((farmer) => (
                   <tr
                     key={farmer.id}
-                    onClick={() => onFarmerSelect(farmer.id)}
-                    className={`cursor-pointer transition-colors ${
+                    className={`transition-colors ${
                       selectedFarmerId === farmer.id
                         ? 'bg-orange-50'
                         : 'hover:bg-gray-50'
                     }`}
                   >
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                      {farmer.company}
+                      {getCompanyName(farmer, i18n.language)}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{translateCrop(farmer.crop, i18n.language)}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{translateCrop(farmer.crop, 'en')}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{farmer.area.toFixed(1)} ha</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      ₾{farmer.loanAmount.toLocaleString()}
+                      {farmer.currency === 'UZS' 
+                        ? `${farmer.loanAmount.toLocaleString()} UZS`
+                        : `₾${farmer.loanAmount.toLocaleString()}`
+                      }
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{translateRegion(farmer.region, i18n.language)}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{translateMunicipality(farmer.municipality, i18n.language)}</td>
-                    <td className="px-4 py-3 text-sm">{getRiskStatusBadge(farmer.riskStatus)}</td>
-                    <td className="px-4 py-3 text-center">
-                      {farmer.checkupStatus === 'checked' && farmer.score ? (
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
-                          {farmer.score.toFixed(1)}
-                        </span>
-                      ) : (
-                        <span className="text-gray-400 text-xs">—</span>
-                      )}
-                    </td>
+                    <td className="px-4 py-3 text-sm">{getRiskStatusButton(farmer.riskStatus, farmer.id)}</td>
                     <td className="px-4 py-3 text-sm">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedFarmerForRequest(farmer);
-                          setShowConfirmModal(true);
+                          // Show different modal based on portal type
+                          if (auth.portal === 'government') {
+                            setShowGovernmentModal(true);
+                          } else {
+                            setShowConfirmModal(true);
+                          }
                         }}
                         className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded transition-colors whitespace-nowrap mb-1"
                       >
@@ -445,7 +496,14 @@ const FarmersList: React.FC<FarmersListProps> = ({
                       </button>
                       <div className="text-[10px] text-gray-500 mt-1 flex items-center gap-1">
                         {farmer.checkupStatus === 'checked' && (
-                          <span>✅ {t('portfolio.filters.checkupChecked').replace('✅ ', '')}</span>
+                          <span className="flex items-center gap-1">
+                            ✅ {t('portfolio.filters.checkupChecked').replace('✅ ', '')}
+                            {farmer.score && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300 ml-1">
+                                {farmer.score.toFixed(1)}
+                              </span>
+                            )}
+                          </span>
                         )}
                         {farmer.checkupStatus === 'in_progress' && (
                           <span>⌛ {t('portfolio.filters.checkupInProgress').replace('⌛ ', '')}</span>
@@ -462,28 +520,33 @@ const FarmersList: React.FC<FarmersListProps> = ({
           </div>
         </div>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal (Bank/Insurance users only) */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-bold text-gray-800 mb-4">
               {t('portfolio.farmersList.confirmRequest')}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-4">
               {t('portfolio.farmersList.confirmMessage')}
             </p>
             {selectedFarmerForRequest && (
-              <div className="mb-6 p-3 bg-gray-50 rounded border border-gray-200">
+              <div className="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
                 <p className="text-sm text-gray-700">
                   <span className="font-semibold">
                     {selectedFarmerForRequest.company}
                   </span>
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {translateCrop(selectedFarmerForRequest.crop, i18n.language)} • {selectedFarmerForRequest.area.toFixed(1)} ha
+                  {translateCrop(selectedFarmerForRequest.crop, 'en')} • {selectedFarmerForRequest.area.toFixed(1)} ha
                 </p>
               </div>
             )}
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+              <p className="text-base font-bold text-blue-900">
+                {t('portfolio.farmersList.serviceCost')}
+              </p>
+            </div>
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -506,6 +569,163 @@ const FarmersList: React.FC<FarmersListProps> = ({
               >
                 {t('portfolio.farmersList.confirm')}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Government Service Modal */}
+      {showGovernmentModal && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full mx-4">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-800">
+                {t('portfolio.farmersList.governmentServiceTitle')}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowGovernmentModal(false);
+                  setSelectedFarmerForRequest(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {selectedFarmerForRequest && (
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm font-semibold text-gray-800 mb-1">
+                  {selectedFarmerForRequest.company}
+                </p>
+                <p className="text-xs text-gray-600">
+                  {translateCrop(selectedFarmerForRequest.crop, 'en')} • {selectedFarmerForRequest.area.toFixed(1)} ha
+                </p>
+              </div>
+            )}
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  window.open('https://drive.google.com/drive/u/0/folders/1xB-LND7qItO1_PBff6abc4E8aUFP63fE', '_blank');
+                }}
+                className="w-full px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                {t('portfolio.farmersList.instructions')}
+              </button>
+              <div className="relative">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.json"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      console.log('File selected for upload:', file.name, 'for farmer', selectedFarmerForRequest?.id);
+                      // TODO: Implement actual file upload
+                      // You can add file upload logic here
+                      alert(`${t('portfolio.farmersList.fileSelected')}: ${file.name}`);
+                    }
+                    // Reset input
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    fileInputRef.current?.click();
+                  }}
+                  className="w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  {t('portfolio.farmersList.uploadData')}
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  setIsGeneratingF100(true);
+                  setShowGovernmentModal(false);
+                  
+                  // Simulate F-100 generation for 5 seconds
+                  setTimeout(() => {
+                    setIsGeneratingF100(false);
+                    setShowF100Modal(true);
+                  }, 5000);
+                }}
+                disabled={isGeneratingF100}
+                className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isGeneratingF100 ? (
+                  <>
+                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>{t('portfolio.farmersList.generatingF100')}</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    {t('portfolio.farmersList.generateF100')}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* F-100 Generation Loader */}
+      {isGeneratingF100 && (
+        <div className="fixed inset-0 z-[10001] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              {t('portfolio.farmersList.generatingF100')}
+            </h3>
+            <p className="text-gray-600 text-center">
+              {t('portfolio.farmersList.generatingF100Message')}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Generated F-100 Document Modal */}
+      {showF100Modal && (
+        <div className="fixed inset-0 z-[10001] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl w-[90vw] h-[90vh] max-w-6xl max-h-[90vh] mx-4 flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-800">
+                {t('portfolio.farmersList.f100Document')}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowF100Modal(false);
+                  setSelectedFarmerForRequest(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src="https://docs.google.com/document/d/11o9fLf3ISH03axo_BSF5jfgYqSF4jSvz/preview"
+                className="w-full h-full border-0"
+                title={t('portfolio.farmersList.f100Document')}
+                allow="fullscreen"
+              />
             </div>
           </div>
         </div>

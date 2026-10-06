@@ -1,17 +1,20 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import RiskStatusFilters from '../components/RiskStatusFilters';
 import PortfolioFilters, { PortfolioFiltersState } from '../components/PortfolioFilters';
 import PortfolioMap, { Farmer } from '../components/PortfolioMap';
 import FarmersList from '../components/FarmersList';
-import RiskTrendChart from '../components/RiskTrendChart';
+import PortfolioAnalytics from '../components/PortfolioAnalytics';
+import FarmerDetailModal from '../components/FarmerDetailModal';
 import { useAppStore } from '../lib/store';
-import farmersData from '../data/farmers-v2.json';
+import farmersData from '../data/farmers-all.json';
 
 interface PortfolioDashboardProps {
   portfolioFilter?: 'cb' | 'sme' | 'all';
 }
 
 const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter }) => {
+  const { t } = useTranslation();
   const auth = useAppStore((state) => state.auth);
   
   // State - empty array means show all
@@ -25,6 +28,19 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeView, setActiveView] = useState<'map' | 'chart'>('map');
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [detailFarmer, setDetailFarmer] = useState<Farmer | null>(null);
+
+  // Handler to open farmer detail modal
+  const handleFarmerClick = (farmerId: string) => {
+    const allFarmers = farmersData as Farmer[];
+    const farmer = allFarmers.find(f => f.id === farmerId);
+    if (farmer) {
+      setDetailFarmer(farmer);
+      setShowDetailModal(true);
+      setSelectedFarmerId(farmerId);
+    }
+  };
 
   // Filter farmers by portfolio
   const portfolioFarmers = useMemo(() => {
@@ -39,9 +55,18 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
 
   // Apply filters
   const filteredFarmers = useMemo(() => {
+    // If all 3 risk statuses are selected, treat it as "show all" (same as empty array)
+    const allStatusesSelected = selectedRiskStatuses.length === 3;
+    const effectiveRiskStatuses = allStatusesSelected ? [] : selectedRiskStatuses;
+    
     return portfolioFarmers.filter((farmer) => {
-      // Risk status filter from buttons - if array is empty, show all
-      if (selectedRiskStatuses.length > 0 && !selectedRiskStatuses.includes(farmer.riskStatus)) {
+      // Country filter
+      if (filters.country && farmer.country !== filters.country) {
+        return false;
+      }
+
+      // Risk status filter from buttons - if array is empty (or all selected), show all
+      if (effectiveRiskStatuses.length > 0 && !effectiveRiskStatuses.includes(farmer.riskStatus)) {
         return false;
       }
 
@@ -83,12 +108,30 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
         return false;
       }
 
+      // Score filter - independent from checkup status
+      // If score range is set and not default (0-10), only show farmers with scores in that range
+      if (filters.scoreRange) {
+        const isDefaultRange = filters.scoreRange[0] === 0 && filters.scoreRange[1] === 10;
+        
+        if (!isDefaultRange) {
+          // If farmer has no score, exclude them when filtering by score
+          if (farmer.score === undefined) {
+            return false;
+          }
+          // Check if score is within range
+          if (farmer.score < filters.scoreRange[0] || farmer.score > filters.scoreRange[1]) {
+            return false;
+          }
+        }
+      }
+
       return true;
     });
   }, [portfolioFarmers, selectedRiskStatuses, filters]);
 
   // Get available filter options
   const filterOptions = useMemo(() => {
+    const countries = Array.from(new Set(portfolioFarmers.map((f) => f.country || 'Unknown'))).sort();
     const crops = Array.from(new Set(portfolioFarmers.map((f) => f.crop))).sort();
     const regions = Array.from(new Set(portfolioFarmers.map((f) => f.region))).sort();
     const municipalities = filters.region
@@ -101,12 +144,17 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
         ).sort()
       : Array.from(new Set(portfolioFarmers.map((f) => f.municipality))).sort();
 
-    return { crops, regions, municipalities };
+    return { countries, crops, regions, municipalities };
   }, [portfolioFarmers, filters.region]);
 
   // Apply all filters EXCEPT risk status button filter to get base for risk counts
   const farmersForRiskCount = useMemo(() => {
     return portfolioFarmers.filter((farmer) => {
+      // Country filter
+      if (filters.country && farmer.country !== filters.country) {
+        return false;
+      }
+
       // Risk status filter from dropdown (not from buttons)
       if (filters.riskStatus && farmer.riskStatus !== filters.riskStatus) {
         return false;
@@ -171,19 +219,12 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      {/* Risk Status Filters - Hidden when farmers list is expanded (80%) */}
+      {/* Combined View Tabs and Risk Status - Hidden when farmers list is expanded (80%) */}
       {!isFarmersListOpen && (
-        <>
-          <RiskStatusFilters
-            selectedStatuses={selectedRiskStatuses}
-            onStatusToggle={handleRiskStatusToggle}
-            counts={riskCounts}
-            totalCount={farmersForRiskCount.length}
-          />
-          
-          {/* View Tabs */}
-          <div className="px-6 pt-4 pb-2">
-            <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg inline-flex">
+        <div className="px-6 pt-4 pb-2">
+          <div className="flex items-center justify-between">
+            {/* View Tabs - Left */}
+            <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setActiveView('map')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
@@ -195,7 +236,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
-                Map View
+                {t('riskTrend.mapView')}
               </button>
               <button
                 onClick={() => setActiveView('chart')}
@@ -208,11 +249,90 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                 </svg>
-                Chart View
+                {t('riskTrend.chartView')}
               </button>
             </div>
+
+            {/* Risk Status Filters - Center */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => handleRiskStatusToggle('high')}
+                className={`relative px-6 py-3 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 bg-red-500 shadow-lg hover:shadow-xl ${
+                  selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('high')
+                    ? 'opacity-100'
+                    : 'opacity-50 hover:opacity-60'
+                }`}
+              >
+                {/* Checkmark - Top Right */}
+                {(selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('high')) && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-sm">{t('portfolio.highRisk')}</span>
+                  <span className="text-xl font-extrabold">{riskCounts.high}</span>
+                </div>
+                <div className="text-sm opacity-90">
+                  {farmersForRiskCount.length > 0 ? Math.round((riskCounts.high / farmersForRiskCount.length) * 100) : 0}%
+                </div>
+              </button>
+              <button
+                onClick={() => handleRiskStatusToggle('observation')}
+                className={`relative px-6 py-3 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 bg-yellow-400 shadow-lg hover:shadow-xl ${
+                  selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('observation')
+                    ? 'opacity-100'
+                    : 'opacity-50 hover:opacity-60'
+                }`}
+              >
+                {/* Checkmark - Top Right */}
+                {(selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('observation')) && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-sm">{t('portfolio.needsObservation')}</span>
+                  <span className="text-xl font-extrabold">{riskCounts.observation}</span>
+                </div>
+                <div className="text-sm opacity-90">
+                  {farmersForRiskCount.length > 0 ? Math.round((riskCounts.observation / farmersForRiskCount.length) * 100) : 0}%
+                </div>
+              </button>
+              <button
+                onClick={() => handleRiskStatusToggle('controlled')}
+                className={`relative px-6 py-3 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 bg-green-500 shadow-lg hover:shadow-xl ${
+                  selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('controlled')
+                    ? 'opacity-100'
+                    : 'opacity-50 hover:opacity-60'
+                }`}
+              >
+                {/* Checkmark - Top Right */}
+                {(selectedRiskStatuses.length === 0 || selectedRiskStatuses.includes('controlled')) && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-sm">{t('portfolio.underControl')}</span>
+                  <span className="text-xl font-extrabold">{riskCounts.controlled}</span>
+                </div>
+                <div className="text-sm opacity-90">
+                  {farmersForRiskCount.length > 0 ? Math.round((riskCounts.controlled / farmersForRiskCount.length) * 100) : 0}%
+                </div>
+              </button>
+            </div>
+
+            {/* Empty div for balance */}
+            <div className="w-[200px]"></div>
           </div>
-        </>
+        </div>
       )}
 
       {/* Main Content */}
@@ -261,7 +381,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
                 <PortfolioMap
                   farmers={filteredFarmers}
                   selectedFarmerId={selectedFarmerId}
-                  onFarmerSelect={setSelectedFarmerId}
+                  onFarmerSelect={handleFarmerClick}
                 />
                 {/* Fullscreen Button */}
                 <button
@@ -275,8 +395,8 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
                 </button>
               </>
             ) : (
-              <div className="h-full overflow-auto p-6 bg-gray-50">
-                <RiskTrendChart filteredFarmers={farmersForRiskCount} />
+              <div className="h-full overflow-auto p-6 bg-gray-50 space-y-6">
+                <PortfolioAnalytics farmers={filteredFarmers} />
               </div>
             )}
           </div>
@@ -286,7 +406,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
             <FarmersList
               farmers={filteredFarmers}
               selectedFarmerId={selectedFarmerId}
-              onFarmerSelect={setSelectedFarmerId}
+              onFarmerSelect={handleFarmerClick}
               isOpen={isFarmersListOpen}
               onToggle={() => setIsFarmersListOpen(!isFarmersListOpen)}
             />
@@ -316,7 +436,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
             <PortfolioMap
               farmers={filteredFarmers}
               selectedFarmerId={selectedFarmerId}
-              onFarmerSelect={setSelectedFarmerId}
+              onFarmerSelect={handleFarmerClick}
               mapId="portfolio-map-fullscreen"
             />
           </div>
@@ -326,12 +446,23 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ portfolioFilter
             <FarmersList
               farmers={filteredFarmers}
               selectedFarmerId={selectedFarmerId}
-              onFarmerSelect={setSelectedFarmerId}
+              onFarmerSelect={handleFarmerClick}
               isOpen={isFarmersListOpen}
               onToggle={() => setIsFarmersListOpen(!isFarmersListOpen)}
             />
           </div>
         </div>
+      )}
+
+      {/* Farmer Detail Modal */}
+      {showDetailModal && detailFarmer && (
+        <FarmerDetailModal
+          farmer={detailFarmer}
+          onClose={() => {
+            setShowDetailModal(false);
+            setDetailFarmer(null);
+          }}
+        />
       )}
     </div>
   );

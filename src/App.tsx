@@ -1,13 +1,54 @@
 import React from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Targeting from './pages/Targeting';
 import Audit from './pages/Audit';
+import GridCalculator from './pages/GridCalculator';
 import Landing from './pages/Landing';
+import NewLanding from './pages/NewLanding';
+import PlaceOrder from './pages/PlaceOrder';
+import MonitoringPage from './pages/MonitoringPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import OrchardCashFlowPage from './pages/OrchardCashFlowPage';
 import PortfolioSelect from './pages/PortfolioSelect';
+import FieldVisitAlternative from './pages/FieldVisitAlternative';
 import Login from './pages/Login';
 import { useTranslation } from 'react-i18next';
+import { SUPPORTED_LANGS } from './lib/i18n';
 import { useAppStore } from './lib/store';
+
+const LoginRoute: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
+  // If user lands on /login while already authenticated, honor ?next= so
+  // flows like Place Order -> /login?next=/monitoring still reach their target.
+  const url = new URL(window.location.href);
+  const next = url.searchParams.get('next');
+  if (isAuthenticated) return <Navigate to={next || '/dashboard'} replace />;
+  return <Login />;
+};
+
+// Entry point that reads a language slug (/ka, /en, /ru and their
+// /field-visit-augmentation variants) and switches the UI language before
+// rendering the page. The initial hard-load language is set flush at i18n init
+// (see lib/i18n.ts); this effect covers in-app navigation to a slugged URL.
+// The chosen language then carries into subsequent navigations (which use the
+// plain, un-prefixed routes). An unknown slug just falls back to the page.
+const LangSlugRoute: React.FC<{ element: React.ReactNode; fallback: string }> = ({
+  element,
+  fallback,
+}) => {
+  const { lang } = useParams();
+  const { i18n } = useTranslation();
+  const valid = !!lang && SUPPORTED_LANGS.includes(lang);
+
+  React.useEffect(() => {
+    if (valid && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [lang, valid, i18n]);
+
+  if (!valid) return <Navigate to={fallback} replace />;
+  return <>{element}</>;
+};
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isAuthenticated = useAppStore((state) => state.auth.isAuthenticated);
@@ -24,10 +65,19 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { i18n, t } = useTranslation();
   const auth = useAppStore((state) => state.auth);
   const logout = useAppStore((state) => state.logout);
+  const [langDropdownOpen, setLangDropdownOpen] = React.useState(false);
 
-  const toggleLang = () => {
-    const next = i18n.language === 'ka' ? 'en' : 'ka';
-    i18n.changeLanguage(next);
+  const languages = [
+    { code: 'ka', label: 'ქართული', flag: '🇬🇪' },
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  ];
+
+  const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  const handleLangChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    setLangDropdownOpen(false);
   };
 
   const getPortalBranding = () => {
@@ -100,13 +150,45 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 {auth.email}
               </span>
             )}
-            <button onClick={toggleLang} className="inline-flex items-center justify-center w-10 h-10 rounded border border-gray-300 hover:bg-gray-50 transition-colors">
-              {i18n.language === 'ka' ? (
-                <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-blue-600 text-white text-xs font-bold">EN</span>
-              ) : (
-                <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-red-600 text-white text-xs font-bold">KA</span>
+            <div className="relative z-[1000]">
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded border border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-lg">{currentLang.flag}</span>
+                <span className="text-sm font-medium hidden sm:inline">{currentLang.label}</span>
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {langDropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-[999]"
+                    onClick={() => setLangDropdownOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[1000]">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => handleLangChange(lang.code)}
+                        className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${
+                          i18n.language === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                        }`}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="font-medium">{lang.label}</span>
+                        {i18n.language === lang.code && (
+                          <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
-            </button>
+            </div>
             <button 
               onClick={logout} 
               className="px-3 py-1.5 rounded bg-red-500 text-white hover:bg-red-600 transition-colors"
@@ -135,9 +217,18 @@ const App: React.FC = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Landing />} />
+      <Route path="/" element={isAuthenticated ? <Navigate to="/monitoring" replace /> : <NewLanding />} />
+      <Route path="/portals" element={<Landing />} />
+      <Route path="/place-order" element={<PlaceOrder />} />
       <Route path="/portfolio-select" element={<PortfolioSelect />} />
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/field-visit-augmentation" element={<FieldVisitAlternative />} />
+      {/* Language-slug entry points — only for home and field-visit pages */}
+      <Route
+        path="/:lang/field-visit-augmentation"
+        element={<LangSlugRoute element={<FieldVisitAlternative />} fallback="/field-visit-augmentation" />}
+      />
+      <Route path="/:lang" element={<LangSlugRoute element={<NewLanding />} fallback="/" />} />
+      <Route path="/login" element={<LoginRoute isAuthenticated={isAuthenticated} />} />
 
       {/* Protected routes */}
       <Route
@@ -167,6 +258,40 @@ const App: React.FC = () => {
             <AuthLayout>
               <Audit />
             </AuthLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/grid-calculator"
+        element={
+          <ProtectedRoute>
+            <AuthLayout>
+              <GridCalculator />
+            </AuthLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/monitoring"
+        element={
+          <ProtectedRoute>
+            <MonitoringPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/monitoring/analytics"
+        element={
+          <ProtectedRoute>
+            <AnalyticsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/monitoring/orchard-cash-flow"
+        element={
+          <ProtectedRoute>
+            <OrchardCashFlowPage />
           </ProtectedRoute>
         }
       />

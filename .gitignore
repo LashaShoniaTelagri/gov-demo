@@ -21,6 +21,14 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
 # Editor
 .vscode/
 .idea/
@@ -38,3 +46,9 @@ cdk/cdk.out/
 cdk/dist/
 cdk/.cdk.staging/
 
+
+# Local tooling / raw GIS exports
+code_memory.db*
+Credo_*_WebMap/
+/cases/
+activate-python.sh

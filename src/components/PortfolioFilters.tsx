@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { translateRegion, translateMunicipality, translateCrop } from '../lib/regionTranslations';
 
 export interface PortfolioFiltersState {
+  country?: string;
   crop?: string;
   areaRange: [number, number];
   loanRange: [number, number];
@@ -10,12 +11,14 @@ export interface PortfolioFiltersState {
   municipality?: string;
   riskStatus?: string;
   checkupStatus?: string;
+  scoreRange?: [number, number];
 }
 
 interface PortfolioFiltersProps {
   filters: PortfolioFiltersState;
   onFiltersChange: (filters: PortfolioFiltersState) => void;
   availableOptions: {
+    countries: string[];
     crops: string[];
     regions: string[];
     municipalities: string[];
@@ -32,6 +35,8 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
   const [areaMaxInput, setAreaMaxInput] = useState(filters.areaRange[1].toString());
   const [loanMinInput, setLoanMinInput] = useState(filters.loanRange[0].toString());
   const [loanMaxInput, setLoanMaxInput] = useState(filters.loanRange[1].toString());
+  const [scoreMinInput, setScoreMinInput] = useState(filters.scoreRange?.[0]?.toString() || '0');
+  const [scoreMaxInput, setScoreMaxInput] = useState(filters.scoreRange?.[1]?.toString() || '10');
 
   const handleFilterChange = (newFilters: Partial<PortfolioFiltersState>) => {
     const updatedFilters = { ...filters, ...newFilters };
@@ -57,6 +62,34 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
         <h2 className="text-base font-bold text-orange-500 uppercase tracking-wide">
           {t('portfolio.filters.title')}
         </h2>
+      </div>
+
+      {/* Country Filter */}
+      <div>
+        <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
+          {t('portfolio.filters.country')}
+        </label>
+        <div className="relative">
+          <select
+            value={filters.country || ''}
+            onChange={(e) => handleFilterChange({ country: e.target.value || undefined })}
+            className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+              backgroundPosition: 'right 0.5rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.25rem 1.25rem',
+              appearance: 'none'
+            }}
+          >
+            <option value="">{t('portfolio.filters.all')}</option>
+            {availableOptions.countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Crop Filter */}
@@ -263,29 +296,75 @@ const PortfolioFilters: React.FC<PortfolioFiltersProps> = ({
         </div>
       </div>
 
-      {/* Check Up Filter */}
-      <div>
-        <label className="block text-xs font-medium text-orange-500 mb-1.5 lowercase">
+      {/* On-Site Monitoring Card */}
+      <div className="border-2 border-orange-200 rounded-lg p-3">
+        <h4 className="text-sm font-bold text-orange-700 mb-3 uppercase">
           {t('portfolio.filters.checkupFilter')}
-        </label>
-        <div className="relative">
-          <select
-            value={filters.checkupStatus || ''}
-            onChange={(e) => handleFilterChange({ checkupStatus: e.target.value || undefined })}
-            className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
-            style={{ 
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-              backgroundPosition: 'right 0.5rem center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '1.25rem 1.25rem',
-              appearance: 'none'
-            }}
-          >
-            <option value="">{t('portfolio.filters.checkupAll')}</option>
-            <option value="checked">{t('portfolio.filters.checkupChecked')}</option>
-            <option value="not_checked">{t('portfolio.filters.checkupNotChecked')}</option>
-            <option value="in_progress">{t('portfolio.filters.checkupInProgress')}</option>
-          </select>
+        </h4>
+        
+        {/* Check-Up Status */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            {t('portfolio.filters.checkupStatusLabel')}
+          </label>
+          <div className="relative">
+            <select
+              value={filters.checkupStatus || ''}
+              onChange={(e) => handleFilterChange({ checkupStatus: e.target.value || undefined })}
+              className="w-full px-2 py-1.5 pr-8 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+              style={{ 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                backgroundPosition: 'right 0.5rem center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '1.25rem 1.25rem',
+                appearance: 'none'
+              }}
+            >
+              <option value="">{t('portfolio.filters.checkupAll')}</option>
+              <option value="checked">{t('portfolio.filters.checkupChecked')}</option>
+              <option value="not_checked">{t('portfolio.filters.checkupNotChecked')}</option>
+              <option value="in_progress">{t('portfolio.filters.checkupInProgress')}</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Score Range */}
+        <div className="mt-3">
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            {t('portfolio.filters.scoreRange')}
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <input
+                type="text"
+                placeholder={t('portfolio.filters.scoreMin')}
+                value={scoreMinInput}
+                onChange={(e) => setScoreMinInput(e.target.value)}
+                onBlur={() => {
+                  const parsed = parseFloat(scoreMinInput);
+                  const min = isNaN(parsed) ? 0 : Math.max(0, Math.min(10, parsed));
+                  setScoreMinInput(min.toString());
+                  handleFilterChange({ scoreRange: [min, filters.scoreRange?.[1] ?? 10] });
+                }}
+                className="w-full px-2 py-1.5 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder={t('portfolio.filters.scoreMax')}
+                value={scoreMaxInput}
+                onChange={(e) => setScoreMaxInput(e.target.value)}
+                onBlur={() => {
+                  const parsed = parseFloat(scoreMaxInput);
+                  const max = isNaN(parsed) ? 10 : Math.max(0, Math.min(10, parsed));
+                  setScoreMaxInput(max.toString());
+                  handleFilterChange({ scoreRange: [filters.scoreRange?.[0] ?? 0, max] });
+                }}
+                className="w-full px-2 py-1.5 text-sm border-2 border-orange-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+          </div>
         </div>
       </div>
 

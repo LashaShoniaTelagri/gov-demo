@@ -12,7 +12,7 @@
     "governmentDesc": "Track RDA beneficiaries, monitor compliance, and analyze program effectiveness",
     "enter": "Enter Portal",
     "comingSoon": "Coming Soon",
-    "footer": "Powered by TelAgri © 2025"
+    "footer": "Powered by TelAgri © 2026"
   },
   "login": {
     "bankTitle": "Bank Portal Login",
@@ -68,23 +68,28 @@
     "underControl": "Under Control",
     "filters": {
       "title": "PORTFOLIO",
+      "country": "country",
       "crop": "crop",
       "area": "area",
       "loan": "loan",
       "region": "region",
       "municipality": "municipality",
-      "checkUp": "CHECK UP",
+      "checkUp": "ON-SITE MONITORING",
       "reset": "Reset Filters",
       "all": "All",
       "status": "Status",
       "statusHighRisk": "High Risk",
       "statusNeedsObservation": "Needs Observation",
       "statusUnderControl": "Under Control",
-      "checkupFilter": "Check Up",
+      "checkupFilter": "On-Site Monitoring",
+      "checkupStatusLabel": "Check-Up Status",
       "checkupAll": "All",
       "checkupChecked": "✅ Checked",
       "checkupNotChecked": "❌ Not Checked",
-      "checkupInProgress": "⌛ In Progress"
+      "checkupInProgress": "⌛ In Progress",
+      "scoreRange": "Score Range",
+      "scoreMin": "Min",
+      "scoreMax": "Max"
     },
     "farmersList": {
       "title": "Farmers List",
@@ -97,18 +102,67 @@
       "municipality": "Municipality",
       "status": "Status",
       "score": "Score",
-      "checkup": "Check Up",
+      "checkup": "On-Site Monitoring",
       "requestService": "Request Service",
       "confirmRequest": "Confirm Service Request",
       "confirmMessage": "Are you sure you want to request a checkup service for this farmer?",
+      "serviceCost": "Service cost: 1500 Euro + VAT",
       "cancel": "Cancel",
-      "confirm": "Continue",
+      "confirm": "Order",
       "successMessage": "Service request submitted successfully!",
-      "total": "Total",
-      "of": "of",
-      "farmers": "farmers",
+      "governmentServiceTitle": "Service Request",
+      "instructions": "Instructions",
+      "uploadData": "Upload Data",
+      "generateF100": "Generate F-100",
+      "generatingF100": "Generating F-100...",
+      "generatingF100Message": "Please wait, F-100 document is being generated",
+      "f100Document": "F-100 Document",
+      "fileSelected": "Selected file",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "lastUpdated": "Last Updated"
+    },
+    "analytics": {
+      "total": "Total",
+      "farmer": "farmer",
+      "farmers": "farmers",
+      "title": "Portfolio Analytics",
+      "subtitle": "Performance snapshots by crop, region, and loan size with agronomic risks.",
+      "topCrops": "Top 3 Crops",
+      "bottomCrops": "Bottom 3 Crops",
+      "topRegions": "Top 3 Regions",
+      "bottomRegions": "Bottom 3 Regions",
+      "crops": "Crops",
+      "regions": "Regions",
+      "performanceByCropsRegions": "Portfolio performance by Crops and Regions",
+      "loanSizeAnalytics": "Loan size analytics",
+      "loanSize": "Loan size",
+      "topLoans": "High Performing Loan Sizes",
+      "bottomLoans": "Underperforming Loan Sizes",
+      "combinedLoans": "High Performing & Underperforming Loan Sizes",
+      "numberOfFarmers": "Number of Farmers",
+      "agrRiskOverview": "Agronomic Risk Overview",
+      "loanBands": "Loan bands reflect active portfolio ranges",
+      "noData": "No data for current filters.",
+      "scoreLegend": "Score bands",
+      "bands": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "watch": "Watch",
+        "risk": "Risk",
+        "critical": "Critical"
+      },
+      "riskFactors": {
+        "irrigation": "Irrigation",
+        "pests": "Stress by Pests",
+        "water": "Water Logging",
+        "climate": "Climate"
+      },
+      "columns": {
+        "crops": "Crops",
+        "regions": "Regions",
+        "loans": "Loan Bands"
+      }
     }
   },
   "map": {
@@ -116,6 +170,23 @@
     "highRisk": "High Risk",
     "needsObservation": "Needs Observation",
     "underControl": "Under Control"
+  },
+  "farmerDetail": {
+    "needObservation": "Need Observation",
+    "underControl": "Under Control",
+    "weakPlants": "Increase in weak plants",
+    "driedPlants": "Rise in the number of dried plants",
+    "missingPlants": "Increase in missing plants",
+    "vegetationIndex": "Vegetation index (indicating pests, diseases, or stress)",
+    "waterUniformity": "Water Distribution Uniformity",
+    "waterDeficiency": "Water deficiency",
+    "excessiveWater": "Excessive water",
+    "weedIssues": "Weed issues",
+    "hailArea": "Hail-affected area",
+    "highWindZone": "High wind zone",
+    "excessRainfall": "Excess rainfall area (floods, etc.)",
+    "droughtArea": "Drought-prone area",
+    "frostArea": "Frost-prone area"
   },
   "executive": {
     "dashboard": "Executive Dashboard",
@@ -202,7 +273,634 @@
     "exceeds": "exceeds threshold of",
     "thresholdPercentage": "Alert Threshold",
     "percentage": "Percentage (%)",
-    "saveSettings": "Save Settings"
+    "saveSettings": "Save Settings",
+    "mapView": "Map",
+    "chartView": "Analytics"
+  },
+  "newLanding": {
+    "fieldVisit": "Field Visit Alternative",
+    "title": "Agricultural Monitoring Platform - Demo",
+    "placeOrder": "Place Order",
+    "login": "Login Into System",
+    "enter": "Continue"
+  },
+  "placeOrder": {
+    "title": "Place Order",
+    "country": "Country",
+    "regionFilter": "Region (map view)",
+    "crops": "Select Crops",
+    "cropsPlaceholder": "Select crops…",
+    "cropNames": { "apple": "Apple", "peach": "Peach" },
+    "selectAll": "Select all",
+    "serviceType": "Service type",
+    "service": {
+      "one-time": {
+        "title": "One-time Monitoring",
+        "info": "Includes one-time monitoring with a single report."
+      },
+      "annual": {
+        "title": "Annual Monitoring",
+        "info": "Includes 7 reports over a year with dynamic change analysis."
+      }
+    },
+    "selectedArea": "Selected area",
+    "cellsSelected": "{{count}} cells selected",
+    "areaHint": "Click grid cells on the map to add them. Click again to remove.",
+    "totalPrice": "Total price",
+    "priceNote": "Note: Calculated based on selected area, crops and service type.",
+    "deliveryTime": "Delivery time",
+    "delivery": {
+      "annual1": "First report will be delivered within 30 days after order confirmation.",
+      "annual2": "A total of 7 reports will be delivered over a 12-month period, based on the critical growth stages of the crops.",
+      "oneTime": "Monitoring results will be delivered within 30 days after order confirmation."
+    },
+    "submit": "Place Order",
+    "submitting": "Submitting…",
+    "clearSelection": "Clear selection",
+    "successTitle": "Order submitted",
+    "successMessage": "Your order has been successfully submitted.",
+    "successClose": "Done",
+    "continueToLogin": "Continue to login",
+    "loginModalTitle": "Portal",
+    "backHome": "Back to home",
+    "tooltip": {
+      "id": "ID",
+      "area": "Area (ha)",
+      "country": "Country",
+      "region": "Region",
+      "municipality": "Municipality"
+    }
+  },
+  "monitoring": {
+    "title": "Monitoring",
+    "country": "Country",
+    "location": {
+      "avgScoreTitle": "Average score of the location"
+    },
+    "uploadKmz": {
+      "title": "Upload KMZ file",
+      "body": "You can upload any KMZ file you have.",
+      "button": "Upload"
+    },
+    "filters": {
+      "title": "Filters",
+      "region": "Region",
+      "municipality": "Municipality",
+      "crop": "Crop",
+      "score": "Score",
+      "scoreLow": "Low",
+      "scoreMid": "Medium",
+      "scoreHigh": "High",
+      "area": "Area (ha)",
+      "min": "Min",
+      "max": "Max",
+      "all": "All",
+      "reset": "Reset filters",
+      "resultsTitle": "Filter results",
+      "numberOfFarms": "Number of Farms"
+    },
+    "createFromFilter": "Create portfolio from filter",
+    "selection": {
+      "title": "Selection",
+      "start": "Create portfolio",
+      "cancel": "Cancel",
+      "instructions": "Click fields on the map to toggle them in this list.",
+      "empty": "No fields selected yet.",
+      "hint": "Start a selection to build a portfolio from the map.",
+      "save": "Save portfolio ({{count}})"
+    },
+    "portfolios": {
+      "title": "My portfolios",
+      "empty": "No portfolios yet.",
+      "fields": "{{count}} fields",
+      "analytics": "Analytics",
+      "kmz": "Download KMZ",
+      "attach": "Attach KMZ",
+      "delete": "Delete"
+    },
+    "tooltip": {
+      "id": "ID",
+      "crop": "Crop",
+      "score": "Score",
+      "area": "Area (ha)",
+      "region": "Region",
+      "municipality": "Municipality"
+    },
+    "analysis": {
+      "title": "Analysis",
+      "scoreLow": "Low score (1.0–3.9). Multiple stress signals detected across the field. Recommend on-site inspection, irrigation review and pest scouting before the next growth cycle.",
+      "scoreMid": "Moderate score (4.0–6.9). Some stress or underperformance indicators are present. Targeted agronomy follow-ups suggested.",
+      "scoreHigh": "Strong score (7.0–10.0). The field is performing within expected ranges across the modelled indicators."
+    },
+    "empty": {
+      "title": "No analysis for this spot",
+      "prompt": "Pick a crop to generate a sample score.",
+      "close": "Close"
+    },
+    "evaluation": {
+      "sectionTitle": "Evaluation Analysis",
+      "cashFlowButton": "Orchard Financial Projections",
+      "categoryBreakdown": "Category breakdown",
+      "trend": "Trend",
+      "overallScore": "Overall Score",
+      "regionalAverage": "Regional Average",
+      "plantedArea": "Planted Area (Ha)",
+      "cadastralCode": "Cadastral code",
+      "cadastralArea": "Area",
+      "tabs": { "bankView": "Underwriting", "monitoringTab": "Monitoring" },
+      "trendLabels": { "m3": "3 months ago", "m2": "2 months ago", "m1": "Latest month" },
+      "categories": {
+        "climate": "Climate",
+        "irrigation": "Irrigation",
+        "management": "Management",
+        "pests": "Pests"
+      },
+      "low": {
+        "title": "Low-Scoring Orchard",
+        "narrative": "This orchard is materially below the regional average. The main weaknesses are irrigation (3/10) and management (4/10). The pest component is also weak at 4/10, while climate is relatively neutral at 6/10, but not strong enough to offset the weaker drivers.",
+        "bankView": "This is a weak lead.\nIt should not be treated as a fast-approval case.\n\nWhat the Bank should focus on at underwriting stage:\n\n• Request a more detailed business plan, especially around operational stability\n• Verify why irrigation performance is weak and how this may affect output and income generation\n• Apply more conservative cash flow assumptions\n• Assess whether this is a temporary setback or a structural weakness",
+        "monitoringTab": "This case should be classified as Red / Attention Needed.\n\nWhat the Bank should monitor:\n\n• Whether the score continues to decline in the coming months\n• Whether irrigation and management improve or remain weak\n• Whether the gap versus the regional average narrows or widens\n\nWhat actions the Bank can take on an already disbursed loan:\n\n• Move the case into enhanced monitoring\n• Review the account more frequently\n• Request updated operational and performance information\n• If the score declines further, move it to a formal watchlist\n• Treat it as a priority review case for the relationship manager"
+      },
+      "mid": {
+        "title": "Mid-Scoring Orchard",
+        "narrative": "The orchard is close to the regional average, but one to two weaker components are limiting its overall score. Climate is strong at 8/10, and pests are moderate at 6/10, but management (5/10) and irrigation (6/10) keep the orchard from moving into a stronger segment.",
+        "bankView": "<p>This is a <strong>possible lead</strong>, but one that requires selective review.</p><p><strong>What the Bank should focus on at underwriting stage:</strong></p><ul><li>Pay particular attention to the <strong>management weakness</strong>, as it is the main limiting factor</li><li>Request a <strong>clearer explanation in the business plan</strong> of what will support stable performance in the coming seasons</li><li>Test whether the revenue assumptions are realistic</li><li>Approval should be considered only after <strong>additional review</strong></li></ul>",
+        "monitoringTab": "<p><strong>What the Bank should monitor:</strong></p><ul><li>Whether the management component improves or remains the main weak point</li><li>Whether the orchard moves closer to the regional average or remains below it</li><li>Whether the current positive trend holds or starts to reverse</li></ul><p><strong>What actions the Bank can take on an already disbursed loan:</strong></p><ul><li>Put the account on a regular review cycle</li><li>Monitor whether it starts moving into the low-score segment</li><li>If the trend turns negative over the next 1–2 months, move it into a higher-priority monitoring group</li><li>If both the score and weakest driver improve, keep it under standard monitoring</li></ul>"
+      },
+      "high": {
+        "title": "High-Scoring Orchard",
+        "narrative": "This orchard is clearly above the regional average. Its strongest areas are management (9/10), irrigation (8/10), and pests (8/10). Climate is also strong at 9/10. The high score is not driven by a single factor — the orchard is strong across the full profile.",
+        "bankView": "This is a good lead.\nIt is a stronger candidate both for new lending and for faster review.\n\nWhat the Bank should focus on at underwriting stage:\n\n• Confirm that the strong performance is stable and not one-off\n• Use the business plan discussion to assess growth potential, not only downside protection\n• This can be considered for faster review, given the high score and positive gap versus the regional average",
+        "monitoringTab": "What the Bank should monitor:\n\n• Whether the high score is sustained over time\n• Whether the weakest criterion starts to deteriorate\n• Whether the orchard remains above the regional average or begins to converge downward\n\nWhat actions the Bank can take on an already disbursed loan:\n\n• Keep the account under standard monitoring\n• Use it as an example of a healthy portfolio case\n• If the trend remains stable, it may qualify for low-touch monitoring\n• If one of the components starts weakening, move it early into Yellow / Review"
+      }
+    },
+    "analyticsBox": {
+      "title": "Analytics",
+      "open": "Open analytics"
+    },
+    "cashFlow": {
+      "back": "Back to map",
+      "title": "Orchard Financial Projections",
+      "subtitle": "Apple orchard, 5 ha — full annual cash flow model.",
+      "regionalLoans": {
+        "title": "Potential Seasonal Loans — by Region",
+        "caption": "",
+        "columns": {
+          "activity": "Activity",
+          "region": "Region",
+          "period": "Period",
+          "totalPortfolio": "Total Portfolio Size (USD)"
+        }
+      },
+      "paymentSchedule": {
+        "title": "Monthly Payment Schedule",
+        "loanSizeLabel": "Loan size",
+        "example": "",
+        "caption": "",
+        "columns": {
+          "month": "Month",
+          "loanPayment": "Loan Payment",
+          "monthlyFreeCash": "Monthly Free Cash",
+          "remainingCash": "Remaining Cash"
+        },
+        "months": {
+          "january": "January",
+          "february": "February",
+          "march": "March",
+          "april": "April",
+          "may": "May",
+          "june": "June",
+          "july": "July",
+          "august": "August",
+          "september": "September",
+          "october": "October",
+          "november": "November",
+          "december": "December"
+        }
+      },
+      "seasonalLoans": {
+        "title": "Potential Loans for the Farmer",
+        "loanSizeTitle": "Loan size (USD)",
+        "totalRevenue": "Total Revenue",
+        "caption": "",
+        "columns": {
+          "activity": "Activity",
+          "period": "Period",
+          "loanSize": "Loan size (USD)",
+          "annualRate": "Loan %",
+          "term": "Loan period (months)",
+          "monthly": "Monthly payment",
+          "total": "Total Payment"
+        },
+        "termMonths": "{{count}} mo",
+        "activities": {
+          "soilPreparation": "Soil Preparation",
+          "mineralFertilizer": "Mineral Fertilizer",
+          "pruning": "Pruning",
+          "sprayingPesticides": "Spraying Pesticides",
+          "harvesting": "Harvesting"
+        },
+        "periods": {
+          "febMay": "Feb–May",
+          "sepNov": "Sep–Nov",
+          "decFeb": "Dec–Feb",
+          "febJul": "Feb–Jul",
+          "augSep": "Aug–Sep"
+        }
+      },
+      "revenueScenario": {
+        "title": "Revenue Scenario Analysis",
+        "baseCase": "Based on Telagri Index",
+        "freeCash": "Free cash",
+        "yieldPerHa": "Yield/ha",
+        "pricePerKg": "Price/kg",
+        "revenuePerHa": "Revenue/ha",
+        "totalYield": "Total yield",
+        "totalRevenue": "Total revenue",
+        "costs": "Costs",
+        "scenarios": {
+          "conservative": "Conservative",
+          "realistic": "Conservative",
+          "optimistic": "Optimistic"
+        }
+      },
+      "yieldAssumption": {
+        "title": "Yield Assumption",
+        "standardYield": "Standard Yield",
+        "telagriYield": "Yield by TelAgri farm score",
+        "marketPrice": "Market price per kg",
+        "tPerHa": "t/ha"
+      },
+      "realisticProfit": {
+        "title": "TELAGRI INDEX",
+        "profit": "Profit",
+        "farmScore": "Farm score",
+        "regionalIndex": "Regional index",
+        "costVariation": "Cost variation index",
+        "priceVariation": "Price variation index"
+      },
+      "annualCashFlow": {
+        "title": "Annual Summary",
+        "monthlyTableTitle": "Monthly cash flow — USD (5 ha)",
+        "metric": "Metric",
+        "total": "TOTAL",
+        "rows": {
+          "directCosts": "Direct costs",
+          "mgmtCosts": "Management costs",
+          "potentialIncome": "Potential Income",
+          "freeCash": "Free cash"
+        },
+        "tiles": {
+          "totalIncome": "Total income",
+          "totalIncomeSub": "Aug 50% · Sep 50%",
+          "directCosts": "Direct costs",
+          "directCostsSub": "5 ha × annual",
+          "mgmtCosts": "Mgmt costs",
+          "mgmtCostsSub": "$1,750 / month",
+          "freeCash": "Free cash",
+          "freeCashSub": "After all costs"
+        }
+      },
+      "directCosts": {
+        "title": "Direct Costs",
+        "costItem": "Cost item",
+        "total": "TOTAL",
+        "items": {
+          "mineralFertilizer": "Mineral Fertilizer",
+          "organicFertilizer": "Organic Fertilizer",
+          "pruning": "Pruning",
+          "wasteDisposal": "Waste Disposal",
+          "soilCultivation": "Soil Cultivation",
+          "irrigation": "Irrigation",
+          "sprayingPesticides": "Spraying Pesticides",
+          "harvest": "Harvest",
+          "harvestTransportation": "Harvest Transportation"
+        }
+      }
+    },
+    "analyticsPage": {
+      "title": "Analytics",
+      "subtitle": "Portfolio and market-wide performance overview.",
+      "back": "Back to map",
+      "tabs": {
+        "monitoring": "Monitoring",
+        "leadGen": "Lead Generation – Market"
+      },
+      "legend": { "portfolio": "Portfolio", "market": "Market" },
+      "subsections": {
+        "scoreDistribution": "Analytics by Score Distribution",
+        "criteria": "Analytics by Criteria",
+        "monthlyTrends": "Monthly Trends"
+      },
+      "kpis": {
+        "title": "KPIs",
+        "metric": "Metric",
+        "value": "Value",
+        "totalAssessed": "Total assessed farms in the market",
+        "bankFarms": "Bank Portfolio farms",
+        "share": "Portfolio share of assessed market",
+        "marketAvg": "Market Avg Score",
+        "portfolioAvg": "Bank Portfolio Avg Score"
+      },
+      "riskTrends": {
+        "title": "Risk & Performance Trends",
+        "caption": "Latest snapshot.",
+        "metrics": {
+          "highRisk": "High Risk %",
+          "improved": "Improved vs Prev Month %",
+          "deteriorated": "Deteriorated vs Prev Month %"
+        }
+      },
+      "scoreDist": {
+        "title": "Score Distribution – Latest Month",
+        "band": "Band",
+        "marketFarms": "Market farms",
+        "portfolioFarms": "Bank Portfolio farms",
+        "bands": { "Low": "Low", "Medium": "Medium", "High": "High" }
+      },
+      "regionBenchmark": {
+        "title": "Region Benchmark",
+        "caption": "Avg score per region (1–10 scale)."
+      },
+      "cropRegion": {
+        "title": "Crop × Region (Avg Score, 10-point scale)",
+        "market": "Market",
+        "bank": "BANK",
+        "crops": {
+          "Vineyard": "Vineyard",
+          "Hazelnut": "Hazelnut",
+          "Apple": "Apple",
+          "Peach": "Peach",
+          "Blueberry": "Blueberry"
+        }
+      },
+      "criteriaRegion": {
+        "title": "Criteria by Region",
+        "caption": "Avg score per region across the 4 weakest-driver criteria, split by Market vs BANK."
+      },
+      "weakestDriver": {
+        "title": "Weakest Driver Distribution",
+        "caption": "Counts and share (%) of farms whose weakest driver is each criterion.",
+        "count": "Count",
+        "share": "Share (%)",
+        "criteria": {
+          "Climate": "Climate",
+          "Irrigation": "Irrigation",
+          "Management": "Management",
+          "Pests": "Pests"
+        }
+      },
+      "monthlyTrend": {
+        "title": "Monthly Trend – Score",
+        "filters": {
+          "region": "Region",
+          "municipality": "Municipality",
+          "crop": "Crop",
+          "all": "All"
+        },
+        "columns": {
+          "month": "Month",
+          "region": "Region",
+          "municipality": "Municipality",
+          "crop": "Crop",
+          "marketAvg": "Market Avg Score",
+          "portfolioAvg": "Bank Portfolio Avg Score"
+        }
+      },
+      "monthlyHighRisk": {
+        "title": "Monthly Trend – High Risk %",
+        "marketSeries": "High Risk % – MARKET",
+        "portfolioSeries": "High Risk % – Bank Portfolio"
+      },
+      "scoreMigration": {
+        "title": "Score Band Migration",
+        "caption": "Farms moving between score bands vs. previous month.",
+        "from": "From Previous Month",
+        "market": "Market",
+        "portfolio": "Portfolio",
+        "bands": { "Low": "Low", "Medium": "Medium", "High": "High" }
+      },
+      "leadGen": {
+        "intro": "Market-wide opportunities ranked and filterable for outreach.",
+        "leadOpportunity": {
+          "title": "Lead Opportunity Ranking",
+          "caption": "Top market opportunities by region and crop. Pick a municipality to narrow the list.",
+          "columns": {
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "avgScore": "Average Score"
+          }
+        },
+        "byMigration": {
+          "title": "Lead Generation – By Migration",
+          "caption": "Pick a band transition to surface a sample farm in that segment.",
+          "filters": {
+            "category": "Category",
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "minScore": "Min score",
+            "maxScore": "Max score"
+          },
+          "columns": {
+            "category": "Category",
+            "farmCode": "Farm code",
+            "gps": "GPS",
+            "areaHa": "Area (ha)"
+          }
+        },
+        "byCriteria": {
+          "title": "Lead Generation – By Criteria",
+          "caption": "Pick a criterion and whether you want weak or strong performers. Adjust the other filters to narrow down.",
+          "filters": {
+            "criterion": "Criterion",
+            "weakStrong": "Weak / Strong",
+            "weak": "Weak",
+            "strong": "Strong",
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "minScore": "Min score",
+            "maxScore": "Max score"
+          },
+          "columns": {
+            "criterion": "Criterion",
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "farmScore": "Farm score",
+            "farmCode": "Farm code",
+            "gps": "GPS",
+            "areaHa": "Area (ha)"
+          }
+        },
+        "byScores": {
+          "title": "Lead Generation – By Scores",
+          "caption": "Top farms ordered by score. Adjust min/max to narrow the list.",
+          "filters": {
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "minScore": "Min score",
+            "maxScore": "Max score"
+          },
+          "columns": {
+            "region": "Region",
+            "municipality": "Municipality",
+            "crop": "Crop",
+            "farmScore": "Farm score",
+            "farmCode": "Farm code",
+            "gps": "GPS",
+            "areaHa": "Area (ha)"
+          }
+        },
+        "actions": {
+          "downloadKmz": "Download KMZ",
+          "createPortfolio": "Create Portfolio",
+          "savePortfolio": "Name this portfolio",
+          "savePlaceholder": "e.g. 'Top Tashkent Blueberries'",
+          "save": "Save",
+          "cancel": "Cancel",
+          "saved": "Portfolio saved.",
+          "noMatches": "No farms match the current filters."
+        }
+      },
+      "riskFlag": {
+        "title": "RISK Flag – Latest Month",
+        "caption": "Orchards flagged for monitoring this month. Toggle Portfolio / Market to scope the watchlist.",
+        "filter": {
+          "all": "All",
+          "portfolio": "Portfolio",
+          "market": "Market"
+        },
+        "columns": {
+          "orchardId": "Orchard ID",
+          "source": "Portfolio / Market",
+          "region": "Region",
+          "municipality": "Municipality",
+          "crop": "Crop",
+          "currentScore": "Current",
+          "prevScore": "Prev",
+          "delta": "Delta",
+          "weakest": "Weakest Criterion",
+          "flag": "Risk Flag"
+        },
+        "flags": { "Watch": "Watch", "Critical": "Critical" }
+      },
+      "scoreMigrationFiltered": {
+        "title": "Score Band Migration (filtered)",
+        "caption": "Pick a band transition and a source to drill into a sample of matching farms.",
+        "filters": {
+          "from": "From Previous Month",
+          "source": "Market / Portfolio",
+          "region": "Region",
+          "municipality": "Municipality",
+          "crop": "Crop",
+          "any": "Any"
+        },
+        "columns": {
+          "region": "Region",
+          "municipality": "Municipality",
+          "crop": "Crop",
+          "farms": "Farms"
+        }
+      }
+    },
+    "save": {
+      "title": "Name this portfolio",
+      "placeholder": "e.g. 'Kakheti apples'",
+      "count": "{{count}} fields will be saved.",
+      "confirm": "Save",
+      "cancel": "Cancel"
+    },
+    "attach": {
+      "title": "Attach KMZ",
+      "message": "Here you can upload a KMZ file.",
+      "chooseFile": "Choose a file",
+      "fileHint": "KMZ or KML",
+      "attach": "Attach",
+      "attached": "\"{{name}}\" attached.",
+      "close": "Close"
+    },
+    "toast": {
+      "saved": "Portfolio saved.",
+      "kmzUnavailable": "KMZ download is not available in the demo."
+    },
+    "sidebar": {
+      "collapse": "Collapse sidebar",
+      "expand": "Expand sidebar"
+    }
+  },
+  "analytics": {
+    "back": "Back to map",
+    "filterHeading": "Field analytics",
+    "portfolioSub": "{{count}} fields · created {{date}}",
+    "filterSub": "Snapshot across all fields in the current view.",
+    "kpi": {
+      "fields": "Fields",
+      "area": "Total area",
+      "avgScore": "Avg score",
+      "crops": "Crops"
+    },
+    "scoreBreakdown": "Score breakdown",
+    "byCrop": "Fields by crop",
+    "byRegion": "Fields by region",
+    "summary": {
+      "title": "Portfolio summary",
+      "body": "Across the selected fields, score distribution and crop mix are within the expected range for the current season. Weak-score clusters merit on-site visits in the next 30 days.\n\nThe combination of crop/region factors suggests stable risk profile; continue monitoring at weekly cadence."
+    },
+    "placeholderNote": "Analysis copy is placeholder text and will be replaced with final content."
+  },
+  "grid": {
+    "title": "Grid Calculator",
+    "country": "Country",
+    "crop": "Crop",
+    "region": "Region",
+    "area": "Area",
+    "totalArea": "Total area",
+    "cell": "Cell",
+    "cellsSelected": "Cells selected",
+    "clearAll": "Clear all",
+    "result": "Result",
+    "computedValue": "Estimated value",
+    "selectPrompt": "Click grid cells on the map to add them. Click again to remove.",
+    "placeholderNote": "Placeholder formula — real values TBD.",
+    "comingSoon": "coming soon",
+    "countryUnavailable": "Grid data for this country is not yet available.",
+    "countries": {
+      "georgia": "Georgia",
+      "uzbekistan": "Uzbekistan"
+    }
+  },
+  "fieldVisit": {
+    "loginTitle": "Log in",
+    "username": "Username",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "loginError": "Invalid username or password",
+    "searchHeading": "Enter Cadastral Code",
+    "cadastralCode": "Cadastral Code",
+    "search": "Search",
+    "notFound": "No parcel found for this cadastral code",
+    "region": "Region",
+    "municipality": "Municipality",
+    "village": "Village",
+    "cadastralArea": "Cadastral Area (ha)",
+    "crop": "Crop",
+    "orchardAge": "Orchard Age (years)",
+    "plantedArea": "Planted Area (ha)",
+    "healthyArea": "Total area of healthy plants (ha)",
+    "lowProductivityArea": "Low Productivity Area (ha)",
+    "orchardCondition": "Orchard Condition",
+    "condition": {
+      "good": "Good",
+      "medium": "Medium",
+      "poor": "Poor"
+    },
+    "evaluationDate": "Orchard Evaluation Date",
+    "downloadFile": "Download File"
   }
 }
 

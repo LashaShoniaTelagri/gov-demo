@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=0.85, maximum-scale=1.0, user-scalable=yes" />
-    <title>Georgia Agricultural Monitoring Demo</title>
+    <title>Agricultural Monitoring Platform - Demo</title>
     <style>
       /* Zoom levels for different screen sizes */
       
@@ -42,6 +42,12 @@
         }
       }
     </style>
+    <script type="text/javascript">
+      window.smartlook||function(a){var e=smartlook=function(){e.api.push(arguments)},t=a.getElementsByTagName("head")[0],r=a.createElement("script");e.api=new Array,r.async=!0,r.type="text/javascript",r.charset="utf-8",r.src="https://web-sdk.smartlook.com/recorder.js",t.appendChild(r)}(document);
+      smartlook("init","d59dc50d7b8c7150e3654cf66e706be6fa259795",{region:"eu"});
+      smartlook("record",{forms:!0,numbers:!0,emails:!0,ips:!0,mask:{selectors:['input[type="password"]',"[data-password]"]}});
+    </script>
+    <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="2fc3ced5-9ff2-490c-b9a5-6e32e5c573f8";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
   </head>
   <body class="bg-gray-50">
     <div id="root"></div>

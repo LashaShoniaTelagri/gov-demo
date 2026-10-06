@@ -59,22 +59,31 @@ const ScoresPerCrop: React.FC<ScoresPerCropProps> = ({ portfolioFilter = 'all' }
   }, [filteredFarmers, selectedCrop]);
 
   const translateCrop = (crop: string) => {
-    const cropTranslations: Record<string, string> = {
-      'ნუში': 'Almond',
-      'ვაშლი': 'Apple',
-      'მსხალი': 'Pear',
-      'ატამი': 'Persimmon',
-      'ალუბალი': 'Sour Cherry',
-      'ბალი': 'Cherry',
-      'ვენახი': 'Grape',
-      'ალუჩა': 'Cherry Plum',
-      'ქლიავი': 'Plum',
-      'მოცვი': 'Blueberry',
-      'კივი': 'Kiwi',
+    const cropTranslations: Record<string, { en: string; ru: string }> = {
+      'ნუში': { en: 'Almond', ru: 'Миндаль' },
+      'ვაშლი': { en: 'Apple', ru: 'Яблоко' },
+      'მსხალი': { en: 'Pear', ru: 'Груша' },
+      'ატამი': { en: 'Persimmon', ru: 'Хурма' },
+      'ალუბალი': { en: 'Sour Cherry', ru: 'Вишня' },
+      'ბალი': { en: 'Cherry', ru: 'Черешня' },
+      'ვენახი': { en: 'Grape', ru: 'Виноград' },
+      'ალუჩა': { en: 'Cherry Plum', ru: 'Алыча' },
+      'ქლიავი': { en: 'Plum', ru: 'Слива' },
+      'მოცვი': { en: 'Blueberry', ru: 'Черника' },
+      'კივი': { en: 'Kiwi', ru: 'Киви' },
+      // English to Russian (for farmers data in English)
+      'Hazelnut': { en: 'Hazelnut', ru: 'Фундук' },
+      'Apple': { en: 'Apple', ru: 'Яблоко' },
+      'Walnut': { en: 'Walnut', ru: 'Грецкий орех' },
+      'Blueberry': { en: 'Blueberry', ru: 'Черника' },
     };
     
-    if (i18n.language === 'en' && cropTranslations[crop]) {
-      return cropTranslations[crop];
+    if (cropTranslations[crop]) {
+      if (i18n.language === 'en') {
+        return cropTranslations[crop].en;
+      } else if (i18n.language === 'ru') {
+        return cropTranslations[crop].ru;
+      }
     }
     return crop;
   };
@@ -147,4 +156,6 @@ const ScoresPerCrop: React.FC<ScoresPerCropProps> = ({ portfolioFilter = 'all' }
 };
 
 export default ScoresPerCrop;
+
+
 

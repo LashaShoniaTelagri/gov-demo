@@ -6,4 +6,75 @@ html, body, #root {
   height: 100%;
 }
 
+.leaflet-tooltip:has(.grid-tooltip) {
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  padding: 12px 16px;
+  color: #111827;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.leaflet-tooltip:has(.grid-tooltip):before {
+  border-top-color: #ffffff;
+}
+.grid-tooltip > div {
+  display: grid;
+  grid-template-columns: 140px auto;
+  gap: 8px 16px;
+}
+.grid-tooltip .k {
+  font-weight: 600;
+  color: #111827;
+}
+.grid-tooltip .v {
+  color: #374151;
+}
+
+.fm-icon {
+  background: transparent;
+  border: none;
+  pointer-events: none;
+}
+.fm-score {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.fm-score-low { background: #dc2626; }
+.fm-score-mid { background: #d97706; }
+.fm-score-high { background: #16a34a; }
+.fm-selectable {
+  outline: 2px dashed rgba(29, 78, 216, 0.7);
+  outline-offset: 2px;
+}
+.fm-selected {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.fm-check {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
 
